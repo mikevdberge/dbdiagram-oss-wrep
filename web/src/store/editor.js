@@ -105,7 +105,6 @@ export const useEditorStore = defineStore("editor", {
     load(state) {
       this.clearDatabase();
       this.$patch(state);
-      this.clearParserError();
       this.updateDatabase();
     },
     updateSourceText(sourceText) {
@@ -145,7 +144,7 @@ export const useEditorStore = defineStore("editor", {
         chart.loadDatabase(database);
       } catch (e) {
         // do nothing
-        console.error(e);
+        console.error('update database error',e);
         this.updateParserError(e);
       }
     },

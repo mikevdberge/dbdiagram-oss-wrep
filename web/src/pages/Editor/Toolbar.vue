@@ -55,11 +55,51 @@
         name="save"/>
     </q-btn>
 
+    <q-btn
+      padding="sm"
+      size="md"
+      class="bg-secondary q-mx-xs"
+      @click="uploadToRepo"
+    >
+      <q-icon
+        size="sm"
+        name="cloud_upload"/>
+    </q-btn>
+
     <q-btn-dropdown
       padding="xs sm"
       size="md"
       color="secondary"
       class="q-mx-xs"
+      @click="repo.getRepoFiles"
+      
+    >
+      <template #label>
+        <q-icon
+          class="q-mr-sm"
+          size="sm"
+          name="cloud_download"/>
+        Take from repo
+      </template>
+      <q-list dense>
+        <q-item v-for="rf of repoFiles" :key="rf"
+                clickable
+                v-close-popup
+                @click="()=>downloadFromRepo(rf)"
+        >
+          <q-item-section>
+            <q-item-label>{{ rf }}</q-item-label>
+          </q-item-section>
+        </q-item>
+      </q-list>
+    </q-btn-dropdown>
+
+    <q-btn-dropdown
+      padding="xs sm"
+      size="md"
+      color="secondary"
+      class="q-mx-xs"
+      disable
     >
       <template #label>
         <q-icon
@@ -87,6 +127,7 @@
       size="md"
       color="secondary"
       class="q-mx-xs"
+      disable
     >
       <template #label>
         <q-icon
@@ -138,10 +179,12 @@
   import { useQuasar } from 'quasar'
   import PreferencesDialog from '../../components/PreferencesDialog'
   import { useFilesStore } from '../../store/files'
+import { useRepoStore } from '../../store/repo'
 
   const editor = useEditorStore()
   const files = useFilesStore()
   const $q = useQuasar()
+  const repo = useRepoStore();
 
   const exportOptions = ref([
     {
@@ -186,9 +229,15 @@
 
   const fileItems = computed(() => files.getFiles)
 
+ 
+
+  const repoFiles = computed(() => repo.getFiles);
+
   const deleteFile = (file) => files.deleteFile(file)
   const newFile = () => files.newFile()
   const saveFile = () => files.saveFile()
+  const uploadToRepo = () => repo.sendInRepo()
+  const downloadFromRepo = (file) => repo.loadFromRepo(file);
   const loadFile = (file) => files.loadFile(file)
 
   const confirmDeleteFile = (file) => {
@@ -227,7 +276,7 @@
       component: PreferencesDialog
     })
   }
-
+  repo.loadRepoConfig();
 </script>
 
 <style scoped>

@@ -1,6 +1,8 @@
 import { defineStore } from "pinia";
 import { useEditorStore } from "src/store/editor";
 import { useChartStore } from "src/store/chart";
+import { useRepoStore } from "./repo";
+
 
 import localforage from "localforage";
 
@@ -8,6 +10,7 @@ const fs = localforage.createInstance({
   name: "dbdiagram-oss",
   storeName: "files"
 });
+
 
 export const useFilesStore = defineStore("files", {
   state: () => ({
@@ -32,6 +35,7 @@ export const useFilesStore = defineStore("files", {
         .then(keys => {
           this.files = keys;
         });
+      
     },
     loadFile(fileName) {
       this.loadFileList();
@@ -40,21 +44,18 @@ export const useFilesStore = defineStore("files", {
       fs.getItem(fileName)
         .then(file => {
           if (file && file.source) {
-            const fSource = file.source;
-            const fChart = file.chart || {};
-
-            const editor = useEditorStore();
-            const chart = useChartStore();
-
-            chart.load(fChart);
-            editor.load({
-              source: fSource
-            });
-
             this.$patch({
               currentFile: fileName
             });
+            const editor = useEditorStore();
+            const chart = useChartStore();
 
+            
+            chart.load(file.chart || {});
+            editor.load({
+                source: file.source
+              });
+              
           }
         });
     },
