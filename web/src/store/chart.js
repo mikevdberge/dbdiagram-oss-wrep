@@ -167,8 +167,9 @@ export const useChartStore = defineStore("chart", {
       });
     },
     updateRef(refId, newRef) {
-      this.refs.$patch({
-        [refId]: newRef
+      this.$patch({
+        refs:{ [refId]: newRef}
+       
       });
     }
   }

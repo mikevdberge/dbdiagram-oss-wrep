@@ -50,11 +50,11 @@ export const useFilesStore = defineStore("files", {
             const editor = useEditorStore();
             const chart = useChartStore();
             
-            chart.load(file.chart || {});
+            
             editor.load({
                 source: file.source
               });
-              
+              chart.load(file.chart || {}); 
           }
         });
     },
