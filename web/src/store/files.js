@@ -49,7 +49,6 @@ export const useFilesStore = defineStore("files", {
             });
             const editor = useEditorStore();
             const chart = useChartStore();
-
             
             chart.load(file.chart || {});
             editor.load({
@@ -110,6 +109,12 @@ export const useFilesStore = defineStore("files", {
       if (!fileName) return;
       fs.removeItem(fileName).then(() => {
         this.loadFileList();
+        if (fileName === this.currentFile){
+          if (this.files.length > 0){
+            this.loadFile(this.files[0]);
+          }
+        }
+        
       });
     },
     renameFile(newName) {

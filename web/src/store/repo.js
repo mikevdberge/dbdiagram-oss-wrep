@@ -14,7 +14,7 @@ const filesfs = localforage.createInstance({
     name: "dbdiagram-oss",
     storeName: "files"
   });
-
+ 
 
 export const useRepoStore = defineStore("repo", {
   state: () => ({
@@ -112,18 +112,22 @@ export const useRepoStore = defineStore("repo", {
     },
     
     async loadFromRepo(file){
+        const fstore = useFilesStore();
         console.log(file);
-        var data = await this.getClient().getObject({
+        await this.getClient().getObject({
             Key:file,
             Bucket:this.bucket,
         }).promise().then((result)=> {
             console.log(result)
-            return result.Body.toString('utf-8')
+            var data = result.Body.toString('utf-8')
+            filesfs.setItem(file,JSON.parse(data)).then(
+                ()=>{
+                    fstore.loadFile(file);
+                }
+            );
+            
         });
-        filesfs.setItem(file,JSON.parse(data));
-         const fstore = useFilesStore();
-         fstore.loadFileList();
-         fstore.loadFile(file);
+       
         
     },
 
@@ -137,6 +141,7 @@ export const useRepoStore = defineStore("repo", {
         } 
         console.log(key);
         var parts = [];
+        fstore.saveFile(fstore.getCurrentFile);
         parts.push(JSON.stringify(filesfs.getItem(fstore.getCurrentFile)));
       
         filesfs.getItem(fstore.getCurrentFile).then(

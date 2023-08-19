@@ -44,6 +44,9 @@ export const useChartStore = defineStore("chart", {
     getCTM(state) {
       return state.ctm;
     },
+    getTables(){
+      return this.tables;
+    },
     getTable(state) {
       return (tableId) => {
         if (!(tableId in state.tables))
@@ -159,8 +162,8 @@ export const useChartStore = defineStore("chart", {
     },
 
     updateTable(tableId, newTable) {
-      this.tables.$patch({
-        [tableId]: newTable
+      this.$patch({
+        tables:{[tableId]: newTable}
       });
     },
     updateRef(refId, newRef) {

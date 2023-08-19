@@ -95,7 +95,107 @@
   const maxScale = ref(200)
 
   const applyAutoLayout = () => {
+    const tbls = chart.getTables;
+    //var cntr = tbls.lenght % 2;
+    var elements = Object.keys(tbls);
+    var layout = [];
+    let update = false;
+    for (let el of elements){
+      layout.push(Object.values(tbls[el]));
+    }
+    for (let index =0 ; index < layout.length; index++){
+      var cross_vector = []
+    if (update) {
+      const tbls = chart.getTables;
+    //var cntr = tbls.lenght % 2;
+    var elements = Object.keys(tbls);
+    layout = [];
+      for (let el of elements){
+        layout.push(Object.values(tbls[el]));
+      }
+    }
+    let current_points = getObjectPoints(layout[index]);
+    for (let i =0 ; i < layout.length; i++){
+      if (i !== index){
+     
+        cross_vector = checkCrossPoints(current_points,getObjectPoints(layout[i]));
+          if (cross_vector[0] || cross_vector[1] || cross_vector[2] || cross_vector[3]){
+          break;
+        }
+      } 
+    }
+    if (cross_vector[0]) {
+      layout[index][0] = layout[index][0]+layout[index][2]*2;
+    }
+    if (cross_vector[1]) {
+      layout[index][0] = layout[index][0]-layout[index][2]*2;
+      layout[index][1] = layout[index][1]+layout[index][3]*0.5;
+    }
+    if (cross_vector[2]) {
+      layout[index][0] = layout[index][0]-layout[index][2]*2;
+      layout[index][1] = layout[index][1]-layout[index][3]*0.5;
+    }
+    if (cross_vector[3]) {
+      layout[index][0] = layout[index][0]+layout[index][2]*2;
+      layout[index][1] =layout[index][1]- layout[index][3]*0.5;
+    }
+    if (cross_vector[0] || cross_vector[1] || cross_vector[2] || cross_vector[3]){
+         update = true;
+         chart.updateTable(index+1,{x:layout[index][0], y:layout[index][1], width:layout[index][2], height:layout[index][3]})
+        }
+    }
+    
     // do nothing
+  }
+
+
+  const getObjectPoints = (object) =>{
+    return [
+      [object[0],object[1]],
+      [object[0]+object[2],object[1]],
+      [object[0]+object[2],object[1]+object[3]],
+      [object[0],object[1]+object[3]]];
+  }
+
+  const checkCrossPoints = (sp, dp) => {
+      let cross_vector = [false,false,false,false];
+      let cross_vector_state = [false,false,false,false];
+      for (let i = 0; i < sp.length; i++) {
+        cross_vector_state = [false,false,false,false];
+        for (let j = 0; j < dp.length; j++) {
+          if (j == 0){
+              if(dp[j][0] <= sp[i][0] && dp[j][1] <= sp[i][1]){
+                cross_vector_state[0] = true;
+              } else {
+                cross_vector_state[0] = false;
+              }
+          }
+          if (j == 1){
+              if(dp[j][0] >= sp[i][0] && dp[j][1] <= sp[i][1]){
+                cross_vector_state[1] = true;
+              }else {
+                cross_vector_state[1] = false;
+              }
+          }
+          if (j == 2){
+              if(dp[j][0] >= sp[i][0] && dp[j][1] >= sp[i][1]){
+                cross_vector_state[2] = true;
+              } else {
+                cross_vector_state[2] = false;
+              }
+          }
+          if (j == 3){
+              if(dp[j][0] <= sp[i][0] && dp[j][1] >= sp[i][1] ){
+                cross_vector_state[3] = true;
+              } else {
+                cross_vector_state[3] = false;
+              }
+          }
+        }
+        
+        cross_vector[i] = cross_vector_state[0] && cross_vector_state[1] && cross_vector_state[2] && cross_vector_state[3];
+      }
+      return cross_vector;
   }
 
   const applyScaleToFit = () => {
