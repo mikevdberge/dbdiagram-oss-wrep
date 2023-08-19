@@ -6,6 +6,9 @@ node_modules
 .quasar
 /dist
 
+.docker
+Dockerfile
+
 # Cordova related directories and files
 /src-cordova/node_modules
 /src-cordova/platforms

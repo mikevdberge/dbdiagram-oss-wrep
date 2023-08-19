@@ -36,7 +36,7 @@ module.exports = configure(function (ctx) {
     ],
     build: {
       env: require("dotenv").config().parsed,
-      publicPath: ctx.prod ? '/dbdiagram-oss/' : '/',
+      publicPath: ctx.prod ? '/' : '/',
       vueRouterMode: "history",
       chainWebpack(/* chain */) {
       }
