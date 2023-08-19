@@ -13,7 +13,11 @@ An Open Source alternative to dbdiagram.io, aiming to have the same basic featur
 
 ## Live Demo
 
+Fork demo [nomadrazor.github.io/dbdiagram-oss-wrep](https://nomadrazor.github.io/dbdiagram-oss-wrep/)
+
 View the latest master branch at [trudan.github.io/dbdiagram-oss](https://trudan.github.io/dbdiagram-oss/)
+
+
 
 
 ## License
