@@ -52,6 +52,12 @@
       </div>
       <div class="row q-col-gutter-x-md">
         <q-input class="col-md-4 col-lg-3"
+                 v-model.number="repo.region"
+                 type="string"
+                 stack-label
+                 :label="`Region`"
+        />
+        <q-input class="col-md-4 col-lg-3"
                  v-model.number="repo.access_key"
                  type="string"
                  stack-label

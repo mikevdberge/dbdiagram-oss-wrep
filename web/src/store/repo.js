@@ -21,6 +21,7 @@ export const useRepoStore = defineStore("repo", {
     host : "",
     bucket: "",
     path: "",
+    region:"",
     access_key: "",
     secret_key: "",
     files : []
@@ -51,6 +52,7 @@ export const useRepoStore = defineStore("repo", {
       return {
         host: state.host,
         bucket: state.bucket,
+        region:state.region,
         path:state.path,
         access_key: state.access_key,
         secret_key: state.secret_key,
@@ -73,6 +75,7 @@ export const useRepoStore = defineStore("repo", {
         this.$patch({
             host : data.host,
             bucket : data.bucket,
+            region: data.region,
             path : data.path,
             access_key : data.access_key,
             secret_key : data.secret_key,
@@ -165,7 +168,7 @@ export const useRepoStore = defineStore("repo", {
     getClient(){ 
         var s3client = new S3({
             apiVersion: 'latest',
-            region:'ru-central1',
+            region:this.region,
             endpoint: `${this.host}`,
             
             credentials: {
