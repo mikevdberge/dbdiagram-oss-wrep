@@ -9,6 +9,7 @@ export const useChartStore = defineStore("chart", {
     inverseCtm: [1, 0, 0, 1, 0, 0],
     tableGroups: {},
     tables: {},
+    tablesColors:{},
     refs: {},
     grid: {
       size: 100,

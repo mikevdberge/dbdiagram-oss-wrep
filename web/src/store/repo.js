@@ -84,6 +84,7 @@ export const useRepoStore = defineStore("repo", {
         
       },
       saveLoadedFiles(err,data){
+        console.log(data);
         var files = data.Contents;
         if (files.length > 0) console.log(files);
         var all_files = [];
@@ -97,6 +98,7 @@ export const useRepoStore = defineStore("repo", {
             files: all_files
         }) ;
       },
+
       loadRepoFiles(){
         this.getClient().listObjects({
             Bucket:this.bucket, 

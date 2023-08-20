@@ -2,6 +2,7 @@
   <div class="dbml-graph-wrapper">
     <v-db-chart v-if="schema && chart.loaded"
                 v-bind="schema"
+                @click="locateInEditor"
                 @dblclick:table-group="locateInEditor"
                 @dblclick:table="locateInEditor"
                 @dblclick:field="locateInEditor"
@@ -80,6 +81,7 @@
       const token = thing.token
       editor.updateSelectionMarker(token.start, token.end)
     }
+    chart.hideTooltip();
   }
 
   const scale = computed({
@@ -129,15 +131,15 @@
     }
     if (cross_vector[1]) {
       layout[index][0] = layout[index][0]-layout[index][2]*2;
-      layout[index][1] = layout[index][1]+layout[index][3]*0.5;
+      layout[index][1] = layout[index][1]+layout[index][3]*0.8;
     }
     if (cross_vector[2]) {
       layout[index][0] = layout[index][0]-layout[index][2]*2;
-      layout[index][1] = layout[index][1]-layout[index][3]*0.5;
+      layout[index][1] = layout[index][1]-layout[index][3]*0.8;
     }
     if (cross_vector[3]) {
       layout[index][0] = layout[index][0]+layout[index][2]*2;
-      layout[index][1] =layout[index][1]- layout[index][3]*0.5;
+      layout[index][1] =layout[index][1]- layout[index][3]*0.8;
     }
     if (cross_vector[0] || cross_vector[1] || cross_vector[2] || cross_vector[3]){
          update = true;
