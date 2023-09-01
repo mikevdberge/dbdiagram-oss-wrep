@@ -18,6 +18,24 @@
       :d="path"
     />
 
+    <text :class="{
+      'db-field__type':true,
+      'db-ref__many-ref':labels.start.ismany,
+    }"
+          :x="labels.start.pos.x"
+          :y="labels.start.pos.y">
+      {{ labels.start.rel }}
+    </text>
+
+    <text :class="{
+      'db-field__type':true,
+      'db-ref__many-ref':labels.end.ismany,
+    }"
+          :x="labels.end.pos.x"
+          :y="labels.end.pos.y">
+      {{ labels.end.rel }}
+    </text>
+
     <g class="db-ref__control-points">
       <circle v-for="(v,i) of controlPoints"
               :key="i"
@@ -132,9 +150,11 @@
   }
 
   const startAnchors = computed(() => {
+    console.log("start anchor",props.endpoints[0])
     return getPositionAnchors(props.endpoints[0])
   })
   const endAnchors = computed(() => {
+ 
     return getPositionAnchors(props.endpoints[1])
   })
 
@@ -147,6 +167,63 @@
     }
     return s.vertices
   })
+
+
+ 
+
+
+  const getDirection = (start, end) => {
+      let directions = {
+    l: false,
+    r:false,
+  };
+      const middleStart = {x: (start[0].x + start[1].x)/2, y: (start[0].y + start[1].y)/2};
+      const middleEnd = {x: (end[0].x + end[1].x)/2, y: (end[0].y + end[1].y)/2};
+      let degree = Math.atan2(middleStart.y -middleEnd.y,middleStart.x - middleEnd.x)*57.2958;
+       
+      directions.l = Math.abs(degree) > 90
+      directions.r = Math.abs(degree) < 90;
+    return directions;
+  }
+
+  const labels = computed(()=>{
+  
+    const pos = getClosest(startAnchors.value,endAnchors.value);
+    console.log("vertices", s.vertices);
+    console.log("start/end point",startAnchors.value,endAnchors.value );
+    const directions = getDirection(startAnchors.value,endAnchors.value);
+    let corelations = {
+      x0: 0, 
+      y0: 0,
+      x1: 0, 
+      y1: 0,
+    }
+    if (directions.l){
+      corelations.x0 = 30;
+      corelations.y0 = -10;
+      corelations.y1 = -10;
+    }
+    if (directions.r){
+      corelations.x0 = -10;
+      corelations.y0 = -10;
+      corelations.x1 = 30;
+      corelations.y1 = -10;
+    }
+
+    return {
+      start: {
+        pos: {x: pos[0].x+corelations.x0, y: pos[0].y+corelations.y0},
+        rel: props.endpoints[0].relation,
+        ismany: props.endpoints[0].relation == '*'
+      },
+      end: {
+        pos: {x: pos[1].x+corelations.x1, y: pos[1].y+corelations.y1},
+        rel: props.endpoints[1].relation,
+        ismany: props.endpoints[1].relation == '*'
+      }
+    }
+  })
+
 
   const updateControlPoints = () => {
     const startElAnchors = startAnchors.value

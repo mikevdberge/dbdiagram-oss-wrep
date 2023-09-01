@@ -81,6 +81,7 @@
       const token = thing.token
       editor.updateSelectionMarker(token.start, token.end)
     }
+    console.log
     chart.hideTooltip();
   }
 

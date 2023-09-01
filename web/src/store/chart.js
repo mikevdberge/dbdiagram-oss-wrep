@@ -129,7 +129,7 @@ export const useChartStore = defineStore("chart", {
       {
         this.getRef(ref.id);
       }
-
+      console.log(database.schemas[0]);
       this.loaded = true;
     },
     load(state) {

@@ -21,6 +21,7 @@
     <g class="db-table-header"
        @mousedown.passive="startDrag"
        @mouseenter.passive="showTooltip"
+       @mouseleave.passive="hideTooltip"
      
     >
       <rect
