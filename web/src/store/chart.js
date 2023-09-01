@@ -9,6 +9,7 @@ export const useChartStore = defineStore("chart", {
     inverseCtm: [1, 0, 0, 1, 0, 0],
     tableGroups: {},
     tables: {},
+    tablesColors:{},
     refs: {},
     grid: {
       size: 100,
@@ -128,7 +129,7 @@ export const useChartStore = defineStore("chart", {
       {
         this.getRef(ref.id);
       }
-
+      console.log(database.schemas[0]);
       this.loaded = true;
     },
     load(state) {

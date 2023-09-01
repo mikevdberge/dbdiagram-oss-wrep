@@ -22,6 +22,7 @@
        @mousedown.passive="startDrag"
        @mouseenter.passive="showTooltip"
        @mouseleave.passive="hideTooltip"
+     
     >
       <rect
         height="35"
@@ -35,6 +36,7 @@
         {{ name }}
       </text>
       <title>{{ name }}</title>
+      
     </g>
     <g class="db-table-fields">
       <v-db-field v-for="field of fields"
