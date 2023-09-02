@@ -32,19 +32,19 @@
       <div class="text-subtitle1">Repository (S3)     <q-btn class="q-ma-sm" color="purple" label="save" @click="()=>save()"  /></div>
       <div class="row q-col-gutter-md">
         <q-input class="col-md-4 col-lg-3"
-                 v-model.number="repo.host"
+                 v-model.trim="repo.host"
                  type="string"
                  stack-label
                  :label="`Host`"
         />
         <q-input class="col-md-4 col-lg-3"
-                 v-model.number="repo.bucket"
+                 v-model.trim="repo.bucket"
                  type="string"
                  stack-label
                  :label="`Bucket`"
         />
         <q-input class="col-md-4 col-lg-3"
-                 v-model.number="repo.path"
+                 v-model.trim="repo.path"
                  type="string"
                  stack-label
                  :label="`Path`"
@@ -52,19 +52,19 @@
       </div>
       <div class="row q-col-gutter-x-md">
         <q-input class="col-md-4 col-lg-3"
-                 v-model.number="repo.region"
+                 v-model.trim="repo.region"
                  type="string"
                  stack-label
                  :label="`Region`"
         />
         <q-input class="col-md-4 col-lg-3"
-                 v-model.number="repo.access_key"
+                 v-model.trim="repo.access_key"
                  type="string"
                  stack-label
                  :label="`Access_key`"
         />
         <q-input class="col-md-4 col-lg-3"
-                 v-model.number="repo.secret_key"
+                 v-model.trim="repo.secret_key"
                  type="string"
                  stack-label
                  :label="`Secret_key`"
