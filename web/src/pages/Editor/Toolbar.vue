@@ -99,7 +99,7 @@
       size="md"
       color="secondary"
       class="q-mx-xs"
-      disable
+      
     >
       <template #label>
         <q-icon
@@ -191,17 +191,9 @@ import { useRepoStore } from '../../store/repo'
       id: 'json',
       label: 'Json'
     },
-    {
-      id: 'mysql',
-      label: 'MySQL'
-    },
-    {
-      id: 'postgres',
-      label: 'PostgreSQL'
-    },
-    {
-      id: 'mssql',
-      label: 'SQL Server'
+      {
+      id: 'SQL',
+      label: 'SQL'
     },
     {
       id: 'svg',
@@ -210,10 +202,6 @@ import { useRepoStore } from '../../store/repo'
     {
       id: 'png',
       label: 'PNG'
-    },
-    {
-      id: 'pdf',
-      label: 'PDF'
     }
   ])
 
