@@ -169,8 +169,6 @@
   })
 
 
- 
-
 
   const getDirection = (start, end) => {
       let directions = {
@@ -189,8 +187,6 @@
   const labels = computed(()=>{
   
     const pos = getClosest(startAnchors.value,endAnchors.value);
-    console.log("vertices", s.vertices);
-    console.log("start/end point",startAnchors.value,endAnchors.value );
     const directions = getDirection(startAnchors.value,endAnchors.value);
     let corelations = {
       x0: 0, 

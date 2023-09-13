@@ -27,7 +27,7 @@
       <rect
         height="35"
         :width="state.width"
-        :fill="headerColor"
+        :fill="headerColor == '' ? customColor : headerColor"
         @click.passive="onHeaderClick"
       />
       <text class="db-table-header__name"
@@ -56,6 +56,7 @@
   import { useChartStore } from '../../store/chart'
   import { snap } from '../../utils/MathUtil'
   import { useEditorStore } from '../../store/editor'
+  import VDbHeadColorTip from './VDbHeadColorTip.vue'
 
   const props = defineProps({
     id: Number,
@@ -83,6 +84,7 @@
   const store = useChartStore()
 
   const state = computed(() => store.getTable(props.id))
+  const customColor = computed(() => store.getTableColor(props.id).color)
 
   const root = ref(null)
 
@@ -190,11 +192,24 @@
     })
   }
 
+  const showColorPanel = () => {
+    const tooltipPosition = {
+      x: state.value.x + state.value.width,
+      y: state.value.y,
+    }
+    store.showPanel(tooltipPosition, VDbHeadColorTip, {
+      table: props
+    })
+  }
+
   const hideTooltip = () => {
     store.hideTooltip();
   }
   function onHeaderClick (e) {
+    showColorPanel();
+    console.log('show panel', `header color >${props.headerColor}<`);
     emit('click:header', e, editor.findTable(props.id));
+   
   }
   function onFieldClick (e, field) {
     emit('click:field', e, field);

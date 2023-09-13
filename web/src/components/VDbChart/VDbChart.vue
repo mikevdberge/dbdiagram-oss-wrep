@@ -79,11 +79,18 @@
                     @mouseenter.passive="onTableMouseEnter"
                     @mouseleave.passive="onTableMouseLeave"
         />
+       
       </g>
       <g id="overlays-layer"
          v-if="store.loaded">
         <v-db-tooltip/>
       </g>
+      <g id="panel-overlays-layer"
+         v-if="store.loaded">
+        <v-db-panel 
+          @click:color="onColorClick"/>
+      </g>
+    
     </g>
     <g id="tools-layer">
       <svg x="10" y="10" width="150" height="36" class="db-tools">
@@ -126,6 +133,7 @@
   import svgPanZoom from 'svg-pan-zoom'
   import { useChartStore } from '../../store/chart'
   import VDbTooltip from './VDbTooltip'
+  import VDbPanel from './VDbPanel.vue'
   import VDbTableGroup from './VDbTableGroup'
 
   const store = useChartStore()
@@ -142,7 +150,8 @@
     refs: {
       type: Array,
       default: () => ([])
-    }
+    },
+   
   })
 
   const emit = defineEmits([
@@ -150,6 +159,7 @@
     'dblclick:table',
     'dblclick:ref',
     'dblclick:field',
+  
   ])
 
   const root = ref(null)
@@ -325,6 +335,12 @@
   function onRefDblClick (e, ref) {
     console.log("onRefDblClick", e, ref);
     emit('dblclick:ref', e, ref);
+  }
+
+  function onColorClick (e, id, color) {
+   
+    store.updateTableColor(id,color);
+    store.hidePanel();
   }
   function onFieldDblClick (e, field) {
     console.log("onFieldDblClick", e, field);

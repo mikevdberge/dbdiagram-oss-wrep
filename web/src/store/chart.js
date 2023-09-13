@@ -26,6 +26,17 @@ export const useChartStore = defineStore("chart", {
       binds: null,
       width: 0,
       height: 0
+    },
+    panel: {
+      x: 0,
+      y: 0,
+      show: false,
+      target: null,
+      component: null,
+      binds: null,
+      width: 0,
+      height: 0,
+      datetime:null
     }
   }),
   getters: {
@@ -60,6 +71,16 @@ export const useChartStore = defineStore("chart", {
         return state.tables[tableId];
       };
     },
+    getTableColor(state) {
+      return (tableId) => {
+        if (!(tableId in state.tablesColors))
+            state.tablesColors[tableId] ={
+              color:null
+          };
+
+        return state.tablesColors[tableId];
+      };
+    },
     getTableGroup(state) {
       return (tableGroupId) => {
         if (!(tableGroupId in state.tableGroups))
@@ -91,6 +112,7 @@ export const useChartStore = defineStore("chart", {
         inverseCtm: state.inverseCtm,
         tables: state.tables,
         refs: state.refs,
+        tablesColors:state.tablesColors,
         grid: state.grid
       };
     }
@@ -114,6 +136,28 @@ export const useChartStore = defineStore("chart", {
         component: null,
         binds: null,
         show: false
+      };
+    },
+    showPanel(target, component, binds) {
+      this.panel = {
+        x: target.x,
+        y: target.y,
+        component: markRaw(component),
+        binds,
+        show: true,
+        datetime: Date.now()
+      };
+    },
+    hidePanel() {
+      this.panel = {
+        x:0,
+        y:0,
+        width:0,
+        height:0,
+        component: null,
+        binds: null,
+        show: false,
+        datetime:null
       };
     },
     loadDatabase(database) {
@@ -161,7 +205,11 @@ export const useChartStore = defineStore("chart", {
         inverseCtm: DOMMatrix.fromMatrix(newCTM).inverse()
       });
     },
-
+    updateTableColor(tableId, color) {
+      this.$patch({
+        tablesColors:{[tableId]: {'color': color }}
+      });
+    },
     updateTable(tableId, newTable) {
       this.$patch({
         tables:{[tableId]: newTable}
