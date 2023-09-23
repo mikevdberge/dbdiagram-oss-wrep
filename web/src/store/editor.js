@@ -115,6 +115,7 @@ export const useEditorStore = defineStore("editor", {
         }
       });
     },
+   
     updatePositions(positions) {
       this.$patch({
         positions: positions
@@ -139,7 +140,7 @@ export const useEditorStore = defineStore("editor", {
         database.normalize();
         this.database = database;
         this.clearParserError();
-        console.log("updated database");
+        console.log("updated database",database);
         const chart = useChartStore();
         chart.loadDatabase(database);
       } catch (e) {

@@ -17,6 +17,7 @@
     "@dbml/core": "^2.3.1",
     "@quasar/extras": "^1.13.4",
     "ace-builds": "^1.4.14",
+    "alertifyjs": "^1.13.1",
     "aws-sdk": "^2.1439.0",
     "core-js": "^3.6.5",
     "localforage": "^1.10.0",
@@ -31,7 +32,7 @@
   "devDependencies": {
     "@aws-sdk/types": "^3.391.0",
     "@babel/eslint-parser": "^7.17.0",
-    "@quasar/app-webpack": "^3.4.7",
+    "@quasar/app-webpack": "^3.11.2",
     "dotenv": "^16.0.0",
     "eslint": "^7.14.0",
     "eslint-config-standard": "^16.0.2",

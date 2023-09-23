@@ -83,6 +83,7 @@
     }
     console.log
     chart.hideTooltip();
+    if ((Date.now() - chart.panel.datetime) > 500) chart.hidePanel();
   }
 
   const scale = computed({
