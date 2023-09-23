@@ -167,6 +167,11 @@ export const useRepoStore = defineStore("repo", {
     sendInRepoCallback(data){
         console.log(data);
     },
+
+    testConnection(){
+        
+    },
+
     getClient(){ 
         var s3client = new S3({
             apiVersion: 'latest',

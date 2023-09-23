@@ -217,8 +217,6 @@ import { useRepoStore } from '../../store/repo'
 
   const fileItems = computed(() => files.getFiles)
 
- 
-
   const repoFiles = computed(() => repo.getFiles);
 
   const deleteFile = (file) => files.deleteFile(file)
