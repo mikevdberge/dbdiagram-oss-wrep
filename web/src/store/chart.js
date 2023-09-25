@@ -59,6 +59,12 @@ export const useChartStore = defineStore("chart", {
     getTables(){
       return this.tables;
     },
+    getRefs(){
+      return this.refs;
+    },
+    getTableGroups(){
+      return this.tableGroups;
+    },
     getTable(state) {
       return (tableId) => {
         if (!(tableId in state.tables))

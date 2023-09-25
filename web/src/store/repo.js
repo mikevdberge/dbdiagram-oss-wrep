@@ -2,9 +2,9 @@ import { defineStore } from "pinia";
 import { markRaw } from "vue";
 import * as S3 from 'aws-sdk/clients/s3';
 
-
 import localforage from "localforage";
 import { useFilesStore } from "./files";
+import { Notify, colors } from "quasar";
 
 const fs = localforage.createInstance({
   name: "dbdiagram-oss",
@@ -14,7 +14,7 @@ const filesfs = localforage.createInstance({
     name: "dbdiagram-oss",
     storeName: "files"
   });
- 
+
 
 export const useRepoStore = defineStore("repo", {
   state: () => ({
@@ -65,9 +65,7 @@ export const useRepoStore = defineStore("repo", {
             if (val){
                 this.load(JSON.parse(val));
             }
-            
         }
-       
         );
        
     },
@@ -85,27 +83,61 @@ export const useRepoStore = defineStore("repo", {
       },
       saveLoadedFiles(err,data){
         console.log(data);
-        var files = data.Contents;
-        if (files.length > 0) console.log(files);
-        var all_files = [];
-        files.forEach((val)=>{
-            if (String(val.Key).startsWith(this.path) && String(val.Key).endsWith(".json")){
-                all_files.push(val.Key);
+        if (err) {
+            Notify.create({
+                caption:"Repository",
+                message:err.code+': '+err.message,
+                color: 'red',
+                icon: 'warning',
+                position: 'bottom-right'
+            })
+        } else {
+            var files = data.Contents;
+            if (files.length > 0) {
+                var all_files = [];
+                files.forEach((val)=>{
+                    if (String(val.Key).startsWith(this.path) && String(val.Key).endsWith(".json")){
+                        all_files.push(val.Key);
+                    }
+                });
+                if (all_files.length > 0){
+                    this.$patch({
+                        files: all_files
+                    });
+                } else {
+                    Notify.create({
+                        caption:"Repository",
+                        message:"Path is empty. Files not found",
+                        color: 'red',
+                        icon: 'warning',
+                        position: 'bottom-right'
+                    })
+                }
+                
+            } else {
+                Notify.create({
+                    caption:"Repository",
+                    message:"Files not found",
+                    color: 'red',
+                    icon: 'warning',
+                    position: 'bottom-right'
+                })
             }
-        });
-        console.log(all_files);
-        this.$patch({
-            files: all_files
-        }) ;
+            
+        }
+       
       },
 
       loadRepoFiles(){
         this.getClient().listObjects({
             Bucket:this.bucket, 
         },this.saveLoadedFiles)
+
       },
      getRepoFiles(){
-    
+        if (!this.checkSettings(false)) {
+            return;
+        }
        this.loadRepoFiles();
     
         
@@ -119,6 +151,9 @@ export const useRepoStore = defineStore("repo", {
     async loadFromRepo(file){
         const fstore = useFilesStore();
         console.log(file);
+        if (!this.checkSettings()) {
+            return;
+        }
         await this.getClient().getObject({
             Key:file,
             Bucket:this.bucket,
@@ -128,6 +163,13 @@ export const useRepoStore = defineStore("repo", {
             filesfs.setItem(file,JSON.parse(data)).then(
                 ()=>{
                     fstore.loadFile(file);
+                    Notify.create({
+                        caption:"Repository",
+                        message:"File successfully downloaded",
+                        color: 'green',
+                        icon: 'cloud_download',
+                        position: "bottom-right"
+                    })
                 }
             );
             
@@ -164,13 +206,70 @@ export const useRepoStore = defineStore("repo", {
        
         
     },
-    sendInRepoCallback(data){
-        console.log(data);
+    sendInRepoCallback(err,data){
+        console.log(err,data);
+        if (err) {
+            Notify.create({
+                caption:"Repository",
+                message:err.code+': '+err.message,
+                multiLine:true,
+                color: 'red',
+                icon: 'warning',
+                position: "bottom-right"
+            })
+
+        } else {
+        Notify.create({
+            caption:"Repository",
+            message:"File successfully uploaded",
+            color: 'green',
+            icon: 'cloud_upload',
+            position: "bottom-right"
+        })
+    }
     },
 
-    testConnection(){
+    checkSettings(showNotication = true){
+        let settingsFlags = [true, true, true, true, true];
+        let errors = [];
+        let settings = ["host", "bucket", "region","access_key", "secret_key"]
+        
+        for (let i = 0; i < settings.length; i++){
+            if (this[settings[i]] == ''){
+                errors.push(`${settings[i]} is empty`);
+                settingsFlags[i] = false;
+            }
+        }
+        if (settingsFlags.every((flag)=>flag)){
+            if (showNotication){
+                Notify.create({
+                    caption:"Repository",
+                    multiLine: true,
+                    message:'All repository settings are set',
+                    color: 'green',
+                    icon: 'done_all',
+                    position:"bottom-right"
+                })
+            }
+            
+            return true;
+        } else {
+            if (showNotication){
+                Notify.create({
+                    caption:"Repository",
+                    multiLine: true,
+                    message:'Some repository parameters are not set: '+ errors.join(","),
+                    color: 'red',
+                    icon: 'warning',
+                    position:"bottom-right"
+                })
+            }
+            
+            return false;
+        }
         
     },
+    
 
     getClient(){ 
         var s3client = new S3({

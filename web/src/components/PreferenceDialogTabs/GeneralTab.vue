@@ -89,7 +89,9 @@
   repo.loadRepoConfig();
 
   function save(){
-    repo.saveRepoConfig();
+    if (repo.checkSettings()){
+      repo.saveRepoConfig();
+    }
   }
 
 </script>

@@ -178,9 +178,12 @@
       const middleStart = {x: (start[0].x + start[1].x)/2, y: (start[0].y + start[1].y)/2};
       const middleEnd = {x: (end[0].x + end[1].x)/2, y: (end[0].y + end[1].y)/2};
       let degree = Math.atan2(middleStart.y -middleEnd.y,middleStart.x - middleEnd.x)*57.2958;
-       
-      directions.l = Math.abs(degree) > 90
-      directions.r = Math.abs(degree) < 90;
+      
+      console.log(degree);
+      directions.l = Math.abs(degree) > 95
+      directions.r = Math.abs(degree) < 85;
+      directions.t = Math.abs(degree) > 85 && Math.abs(degree) < 95;
+      directions.b = degree < -85 && degree < -95;
     return directions;
   }
 
@@ -188,12 +191,16 @@
   
     const pos = getClosest(startAnchors.value,endAnchors.value);
     const directions = getDirection(startAnchors.value,endAnchors.value);
+
+
     let corelations = {
       x0: 0, 
       y0: 0,
       x1: 0, 
       y1: 0,
     }
+    
+    
     if (directions.l){
       corelations.x0 = 30;
       corelations.y0 = -10;
@@ -205,6 +212,14 @@
       corelations.x1 = 30;
       corelations.y1 = -10;
     }
+
+    if (directions.t || directions.b){
+      corelations.x0 = -10;
+      corelations.y0 = -10;
+      corelations.x1 = -10;
+      corelations.y1 = -10;
+    }
+
 
     return {
       start: {

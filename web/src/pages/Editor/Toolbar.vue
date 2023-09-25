@@ -71,7 +71,7 @@
       size="md"
       color="secondary"
       class="q-mx-xs"
-      @click="repo.getRepoFiles"
+      @show="repo.getRepoFiles"
       
     >
       <template #label>
@@ -113,6 +113,7 @@
         <q-item v-for="exportOption of exportOptions"
                 :key="exportOption.id"
                 clickable
+                @click="showExportDialog(exportOption.id)"
                 dense
         >
           <q-item-section>
@@ -174,10 +175,11 @@
 </template>
 
 <script setup>
-  import { computed, ref } from 'vue'
+  import { computed, ref, onMounted } from 'vue'
   import { useEditorStore } from 'src/store/editor'
   import { useQuasar } from 'quasar'
   import PreferencesDialog from '../../components/PreferencesDialog'
+  import VDbExportDialog from '../../components/VDbExportDialog.vue'
   import { useFilesStore } from '../../store/files'
 import { useRepoStore } from '../../store/repo'
 
@@ -186,14 +188,16 @@ import { useRepoStore } from '../../store/repo'
   const $q = useQuasar()
   const repo = useRepoStore();
 
+setTimeout(()=>{
+ 
+    repo.loadRepoConfig();
+    repo.getRepoFiles();
+},500);
+ 
   const exportOptions = ref([
     {
       id: 'json',
       label: 'Json'
-    },
-      {
-      id: 'SQL',
-      label: 'SQL'
     },
     {
       id: 'svg',
@@ -262,7 +266,20 @@ import { useRepoStore } from '../../store/repo'
       component: PreferencesDialog
     })
   }
-  repo.loadRepoConfig();
+
+  const showExportDialog = (id) => {
+    var cfn = files.getCurrentFile.split('/');
+    var fn = cfn[cfn.length-1].split('.')[0] +'.'+ id;
+console.log(cfn);
+    $q.dialog({
+      component: VDbExportDialog,
+      componentProps: {
+        id:id,
+        file_name: fn
+      },
+    })
+  }
+  
 </script>
 
 <style scoped>
