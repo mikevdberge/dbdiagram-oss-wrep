@@ -187,12 +187,16 @@ import { useRepoStore } from '../../store/repo'
   const files = useFilesStore()
   const $q = useQuasar()
   const repo = useRepoStore();
-
-setTimeout(()=>{
- 
+onMounted(()=>{
+  setTimeout(()=>{
+    console.log('load from repository');
     repo.loadRepoConfig();
-    repo.getRepoFiles();
-},500);
+    setTimeout(()=>{
+      repo.getRepoFiles();
+    },500);
+},300);
+});
+
  
   const exportOptions = ref([
     {
