@@ -94,8 +94,9 @@
     const maxFieldWidth = fieldEls.map(f => [...f.querySelectorAll('text')].map(ft => ft.getComputedTextLength())
       .reduce((prev,curr) => prev + curr, 3*16))
       .reduce((prev,curr) => Math.max(prev, curr), 0);
-
-    state.value.width = snap(Math.max(200, maxFieldWidth), gridSnap);
+    const tableNameWidth = root.value.querySelectorAll('.db-table-header__name')[0].getComputedTextLength()*(0.08*16);
+    const maxWidth = Math.max(maxFieldWidth, tableNameWidth);
+    state.value.width = snap(Math.max(200, maxWidth), gridSnap);
   }
 
   const updateHeight = () => {
