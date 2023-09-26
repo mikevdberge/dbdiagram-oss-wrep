@@ -19,6 +19,12 @@
     transform: translateX(10px) translateY(.35em);
   }
 
+  &__pk-icon {
+    fill: var(--field-name-color);
+    font-size: 12px;
+    transform: translateX(10px) translateY(.35em);
+  }
+
   &__type {
     font-size: 12px;
     fill: var(--field-type-color);
