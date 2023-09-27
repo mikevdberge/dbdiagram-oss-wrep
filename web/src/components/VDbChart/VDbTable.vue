@@ -184,6 +184,7 @@
   }
 
   const showTooltip = () => {
+    
     const tooltipPosition = {
       x: state.value.x + state.value.width,
       y: state.value.y,
@@ -194,6 +195,7 @@
   }
 
   const showColorPanel = () => {
+    
     const tooltipPosition = {
       x: state.value.x + state.value.width,
       y: state.value.y,
