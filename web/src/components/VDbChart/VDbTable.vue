@@ -35,7 +35,6 @@
       >
         {{ name }}
       </text>
-      <title>{{ name }}</title>
       
     </g>
     <g class="db-table-fields">

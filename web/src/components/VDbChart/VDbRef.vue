@@ -175,51 +175,62 @@
     l: false,
     r:false,
   };
-      const middleStart = {x: (start[0].x + start[1].x)/2, y: (start[0].y + start[1].y)/2};
-      const middleEnd = {x: (end[0].x + end[1].x)/2, y: (end[0].y + end[1].y)/2};
+      let middleStart = {};
+      let middleEnd = {};
+      if (start.length){
+        middleStart = {x: (start[0].x + start[1].x)/2, y: (start[0].y + start[1].y)/2};
+      } else {
+        middleStart = start;
+      }
+      if (end.length){
+        middleEnd = {x: (end[0].x + end[1].x)/2, y: (end[0].y + end[1].y)/2};
+      } else {
+        middleEnd = end;
+      }
+         
       let degree = Math.atan2(middleStart.y -middleEnd.y,middleStart.x - middleEnd.x)*57.2958;
       
-      console.log(degree);
-      directions.l = Math.abs(degree) > 95
-      directions.r = Math.abs(degree) < 85;
-      directions.t = Math.abs(degree) > 85 && Math.abs(degree) < 95;
-      directions.b = degree < -85 && degree < -95;
+      directions.l = Math.abs(degree) < 10 || Math.abs(degree) < 45;
+      directions.r = Math.abs(degree) > 170 || Math.abs(degree) > 135;
+      directions.t = degree > 0 && Math.abs(degree) > 45 && Math.abs(degree) < 135;
+      directions.b = degree < 0 && Math.abs(degree) > 45 && Math.abs(degree) < 135;
     return directions;
   }
 
+
   const labels = computed(()=>{
   
-    const pos = getClosest(startAnchors.value,endAnchors.value);
+    let pos = getClosest(startAnchors.value,endAnchors.value);
     const directions = getDirection(startAnchors.value,endAnchors.value);
-
-
+    const cpstart_direction = getDirection(startAnchors.value,controlPoints.value[0]);
+    const cpend_direction = getDirection(endAnchors.value,controlPoints.value[1]);
+    console.log('direction',directions);
     let corelations = {
       x0: 0, 
       y0: 0,
       x1: 0, 
       y1: 0,
     }
-    
-    
-    if (directions.l){
+    if (cpstart_direction.l){
+      corelations.x0 = -5;
+      corelations.y0 = -10;
+      pos[0] = startAnchors.value[0];
+    }
+    if (cpstart_direction.r){
       corelations.x0 = 30;
       corelations.y0 = -10;
-      corelations.y1 = -10;
+      pos[0] = startAnchors.value[1];
     }
-    if (directions.r){
-      corelations.x0 = -10;
-      corelations.y0 = -10;
+    if (cpend_direction.l){
+      corelations.x1 = -5;
+      corelations.y1 = -10;
+      pos[1] = endAnchors.value[0];
+    }
+    if (cpend_direction.r){
       corelations.x1 = 30;
       corelations.y1 = -10;
+      pos[1] = endAnchors.value[1];
     }
-
-    if (directions.t || directions.b){
-      corelations.x0 = -10;
-      corelations.y0 = -10;
-      corelations.x1 = -10;
-      corelations.y1 = -10;
-    }
-
 
     return {
       start: {
