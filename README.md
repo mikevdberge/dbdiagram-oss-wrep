@@ -21,7 +21,7 @@ An Open Source alternative to dbdiagram.io, aiming to have the same basic featur
 
 ## Architecture - Solution
 
-![Arch](https://raw.githubusercontent.com/TruDan/dbdiagram-oss/master/.github/media/arch.png)
+![Arch](https://raw.githubusercontent.com/NomadRazor/dbdiagram-oss-wrep/master/.github/media/arch.png)
 
 ## Live Demo
 
