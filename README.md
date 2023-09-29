@@ -19,6 +19,10 @@ An Open Source alternative to dbdiagram.io, aiming to have the same basic featur
 + 9. Several new bugs (decision is in progress)
 + 10. Next cool update for header and relation labels will be later...
 
+## Architecture - Solution
+
+![Arch](https://raw.githubusercontent.com/TruDan/dbdiagram-oss/master/.github/media/arch.png)
+
 ## Live Demo
 
 Fork demo [nomadrazor.github.io/dbdiagram-oss-wrep](https://nomadrazor.github.io/dbdiagram-oss-wrep/)
