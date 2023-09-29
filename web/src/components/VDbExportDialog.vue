@@ -153,6 +153,10 @@ function saveSvg(){
     fake_svg.appendChild(tablegroups.cloneNode(true));
     var tables = document.getElementById('tables-layer');
     fake_svg.appendChild(tables.cloneNode(true));
+    let color_icons = fake_svg.getElementById('tables-layer').getElementsByClassName('db-table-header__color-icon');
+    while (color_icons.length > 0) {
+      color_icons[0].parentNode.removeChild(color_icons[0]);
+    }
     var refs = document.getElementById('refs-layer');
     fake_svg.appendChild(refs.cloneNode(true));
     let fake_refs = fake_svg.getElementById('refs-layer').children;

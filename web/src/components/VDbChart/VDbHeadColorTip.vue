@@ -1,23 +1,30 @@
 <template>
-  <q-card-section>
-    <div class="text-subtitle2">{{ table.name }}</div>
-  </q-card-section>
-  <q-separator />
-  <q-card-section>
-    <div class="text-caption">Colors</div>
-    <div class="q-pm-xs row">
+  
+  <q-card-section style="padding: 8px 8px;">
+    <div class="text-subtitle2">Colors</div>
+    <div class="row">
+      <div class="col-md-2">
+        <div class="text-subtitle4">Default:</div>
+      </div>
+      <div class="col-md-2 offset-md-2">
+        <rect class="db-tooltip__colorblock">
+              <rect class="db-tooltip__colorblock db-tooltip__colorblock-default" :style="{'background': cl, 'height':'1.4em', width: '1.4em'}" @click.passive="setColor($event, null)"></rect>
+            </rect>
+      </div>
+      
+    </div>
+    <div class="q-pa-xs col">
      
-      <div v-for="row of palette" ref="cp">
-        <div class="col">
-        <q-item v-for="cl of row" :key="cl" >
+      <div class="row" v-for="row of palette" ref="cp" style="padding: 4px 6px;">
+        <div v-for="cl of row" :key="cl" style="padding: 4px 6px;">
         
             <rect class="db-tooltip__colorblock">
               <rect class="db-tooltip__colorblock" :style="{'background': cl, 'height':'1.4em', width: '1.4em'}" @click.passive="setColor($event, cl)"></rect>
             </rect>
  
-      </q-item>
-    </div>
-  </div>      
+          </div>
+    
+    </div>      
   
     </div>
   </q-card-section>

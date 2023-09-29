@@ -19,6 +19,20 @@
       }
     }
 
+    &__color-icon {
+      
+      pointer-events: all;
+    
+    }
+    &__icon-bg {
+      
+      cursor: pointer !important;
+    }
+
+    &__icon {
+      fill: var(--table-header-fg-color);
+      pointer-events: none;
+    }
 
     text, &__name {
       transform: translateX(10px) translateY(.35em);
