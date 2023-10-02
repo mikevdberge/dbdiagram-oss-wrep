@@ -23,6 +23,10 @@ An Open Source alternative to dbdiagram.io, aiming to have the same basic featur
 
 ![Arch](https://raw.githubusercontent.com/NomadRazor/dbdiagram-oss-wrep/master/.github/media/arch.png)
 
+## Repository settings demo
+
+![Arch](https://raw.githubusercontent.com/NomadRazor/dbdiagram-oss-wrep/master/.github/media/repo_demo.mp4)
+
 ## Live Demo
 
 Fork demo [nomadrazor.github.io/dbdiagram-oss-wrep](https://nomadrazor.github.io/dbdiagram-oss-wrep/)
