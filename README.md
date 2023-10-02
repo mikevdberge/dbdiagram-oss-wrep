@@ -25,7 +25,7 @@ An Open Source alternative to dbdiagram.io, aiming to have the same basic featur
 
 ## Repository settings demo
 
-![RepoDemo](https://raw.githubusercontent.com/NomadRazor/dbdiagram-oss-wrep/master/.github/media/repo_demo.mp4)
+![](https://raw.githubusercontent.com/NomadRazor/dbdiagram-oss-wrep/master/.github/media/repo_demo.mp4)
 
 ## Live Demo
 
