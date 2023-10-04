@@ -72,6 +72,7 @@
          v-if="store.loaded">
         <v-db-table v-for="table of tables"
                     v-bind="table"
+                    :useSchema="useSchema"
                     :key="table.id"
                     :container-ref="root"
                     @click:header="dblclickHelper(onTableDblClick, $event, table)"
@@ -151,6 +152,10 @@
       type: Array,
       default: () => ([])
     },
+    schemes: {
+      type: Array,
+      default: () => ([])
+    },
    
   })
 
@@ -165,6 +170,7 @@
   const root = ref(null)
   const bgGrid2 = ref(null)
   const bgGridRect = ref(null)
+  const useSchema = computed(()=>props.schemes.length > 1);
 
   const bgGrid = reactive({
     pattern: {

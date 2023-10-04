@@ -31,7 +31,7 @@
         
       />
       <text class="db-table-header__name" y="16">
-        {{ name }}
+       {{ useSchema ? schema.name+'.' : "" }}{{ name }}
       </text>
       <g class="db-table-header__color-icon" v-show="palette_icon" @click.passive="onHeaderClick">
       <rect class="db-table-header__icon-bg" :fill="headerColor == '' ? customColor : headerColor" :x="state.width-25" y="0" height="35" width="20" />
@@ -79,7 +79,11 @@
       type: Array,
       default: () => ([])
     },
-    containerRef: Object
+    containerRef: Object,
+    useSchema:{
+      type:Boolean,
+      default: ()=>{false}
+    }
   })
 
   const editor = useEditorStore()

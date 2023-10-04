@@ -43,8 +43,26 @@
     get: () => editor.getSplit,
     set: (src) => editor.updateSplit(src)
   })
+  
+  const schema = computed(() => {
+    var single_schema = {
+      tableGroups:[],
+      tables:[],
+      refs:[],
+      schemes:[]
+    }
+    editor.getDatabase?.schemas?.forEach(x => {
+      single_schema.schemes.push({
+        id:x.id,
+        name: x.name
+      });
+      single_schema.tableGroups = single_schema.tableGroups.concat(x.tableGroups);
+      single_schema.tables = single_schema.tables.concat(x.tables);
+      single_schema.refs = single_schema.refs.concat(x.refs);
+    });
 
-  const schema = computed(() => editor.getDatabase?.schemas?.find(x => true))
+    return single_schema;
+    })
 </script>
 
 <style scoped>
