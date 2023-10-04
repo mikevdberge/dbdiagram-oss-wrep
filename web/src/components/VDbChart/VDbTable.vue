@@ -109,6 +109,14 @@
     state.value.height = 35 + (30 * props.fields.length);
   }
 
+  watch(() => props.useSchema, value => {
+    updateWidth();
+  });
+  
+  watch(() => props.name, value => {
+    updateWidth();
+  });
+
   watch(() => props.fields, value => {
     updateHeight();
     updateWidth();
