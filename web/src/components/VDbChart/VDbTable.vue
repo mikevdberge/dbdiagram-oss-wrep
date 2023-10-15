@@ -102,7 +102,7 @@
       .reduce((prev,curr) => Math.max(prev, curr), 0);
     const tableNameWidth = root.value.querySelectorAll('.db-table-header__name')[0].getComputedTextLength()*(0.08*16);
     const maxWidth = Math.max(maxFieldWidth, tableNameWidth);
-    state.value.width = snap(Math.max(200, maxWidth), gridSnap);
+    state.value.width = snap(Math.max(200, maxWidth), gridSnap)+20;
   }
 
   const updateHeight = () => {
@@ -215,6 +215,7 @@
       x: state.value.x + state.value.width,
       y: state.value.y,
     }
+    
     store.showPanel(tooltipPosition, VDbHeadColorTip, {
       table: props
     })

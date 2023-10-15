@@ -157,6 +157,10 @@ function saveSvg(){
     while (color_icons.length > 0) {
       color_icons[0].parentNode.removeChild(color_icons[0]);
     }
+    let note_icons = fake_svg.getElementById('tables-layer').getElementsByClassName('db-field__note-icon');
+    while (note_icons.length > 0) {
+      note_icons[0].parentNode.removeChild(note_icons[0]);
+    }
     var refs = document.getElementById('refs-layer');
     fake_svg.appendChild(refs.cloneNode(true));
     let fake_refs = fake_svg.getElementById('refs-layer').children;
@@ -164,6 +168,7 @@ function saveSvg(){
       ref.removeChild(ref.getElementsByClassName("db-ref__control-points")[0]);
     }
     
+
     container.appendChild(fake_svg);
     applyCSS(container, 
     ["fill", "font-family", "font-size","stroke","stroke-width",

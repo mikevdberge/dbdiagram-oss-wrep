@@ -71,7 +71,7 @@ export const useChartStore = defineStore("chart", {
           state.tables[tableId] = {
             x: 0,
             y: 0,
-            width: 200,
+            width: 220,
             height: 32
           };
         return state.tables[tableId];

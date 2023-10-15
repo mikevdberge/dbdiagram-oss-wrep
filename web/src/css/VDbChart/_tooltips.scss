@@ -33,3 +33,39 @@
     background: var(--table-header-color);
   }
 }
+
+.db-tip-highlights{
+  x: 0;
+  y: 0;
+  width: fit-content;
+  pointer-events: none;
+  display: block;
+
+  .enum-value{
+    display: block;
+    
+  }
+  .enum-class{
+    color: #CA4242;
+  }
+  .enum-type{
+    color: #79AD51;
+    font-weight: 700;
+  }
+  .general-type{
+    color: #EB801B;
+  }
+  .enum-value_tab{
+    width:20px;
+  }
+  .enum-value_name{
+    color: #A15CF5;
+  }
+  .enum-value_note{
+    height: 0.8em;
+    font-size: 0.8em;
+    
+    text-wrap: nowrap;
+    color: #DE65C3;
+  }
+}
