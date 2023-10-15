@@ -18,6 +18,11 @@ An Open Source alternative to dbdiagram.io, aiming to have the same basic featur
 + 8. Export to SVG, PNG, Json
 + 9. Several new bugs (decision is in progress)
 + 10. Next cool update for header and relation labels will be later...
+ 
+### Oct.23 update
++ 11. Added field tooltion with note, enum description and default
++ 12. Redesign table tooltip, added indexes
++ 13. Added not null and enum tag on diagram
 
 ## Architecture - Solution
 
@@ -25,10 +30,11 @@ An Open Source alternative to dbdiagram.io, aiming to have the same basic featur
 
 ## Repository settings demo
 
-![Repo Demo Link](https://raw.githubusercontent.com/NomadRazor/dbdiagram-oss-wrep/master/.github/media/repo_demo.mov)
-
 https://github.com/NomadRazor/dbdiagram-oss-wrep/assets/36404538/d7893336-13b5-431a-97d1-2cddc6073aec
 
+## Tooltips demo
+
+https://github.com/NomadRazor/dbdiagram-oss-wrep/assets/36404538/261f2283-af2b-4044-8d98-80d70270ef43
 
 
 ## Live Demo
