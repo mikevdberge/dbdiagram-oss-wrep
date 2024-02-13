@@ -399,7 +399,6 @@ ace.define('ace/mode/dbml', ["require","exports","module","ace/lib/oop","ace/mod
 
     this.$outdent = new MatchingBraceOutdent();
     this.$behaviour = new CstyleBehaviour();
-
     this.foldingRules = new CStyleFoldMode();
   };
   oop.inherits(Mode, TextMode);

@@ -343,9 +343,9 @@
     emit('dblclick:ref', e, ref);
   }
 
-  function onColorClick (e, id, color) {
+  function onColorClick (e, id,name, color) {
    
-    store.updateTableColor(id,color);
+    store.updateTableColor(name,id,color);
     store.hidePanel();
   }
   function onFieldDblClick (e, field) {

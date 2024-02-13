@@ -78,13 +78,18 @@ export const useChartStore = defineStore("chart", {
       };
     },
     getTableColor(state) {
-      return (tableId) => {
-        if (!(tableId in state.tablesColors))
-            state.tablesColors[tableId] ={
-              color:null
-          };
+      return (tablename, tableId) => {
+        if (!(tablename in state.tablesColors)) {
+          state.tablesColors[tablename] = {
+            color:null
+        }
+        }
+        if (tableId in state.tablesColors) {
+          state.tablesColors[tablename] = state.tablesColors[tableId];
+          delete state.tablesColors[tableId];
+        }    
 
-        return state.tablesColors[tableId];
+        return state.tablesColors[tablename];
       };
     },
     getTableGroup(state) {
@@ -211,9 +216,9 @@ export const useChartStore = defineStore("chart", {
         inverseCtm: DOMMatrix.fromMatrix(newCTM).inverse()
       });
     },
-    updateTableColor(tableId, color) {
+    updateTableColor(tablename, color) {
       this.$patch({
-        tablesColors:{[tableId]: {'color': color }}
+        tablesColors:{[tablename]: {'color': color }}
       });
     },
     updateTable(tableId, newTable) {
