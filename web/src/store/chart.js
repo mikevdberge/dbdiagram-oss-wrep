@@ -216,7 +216,7 @@ export const useChartStore = defineStore("chart", {
         inverseCtm: DOMMatrix.fromMatrix(newCTM).inverse()
       });
     },
-    updateTableColor(tablename, color) {
+    updateTableColor(tablename,id, color) {
       this.$patch({
         tablesColors:{[tablename]: {'color': color }}
       });
