@@ -76,7 +76,7 @@
 
   > svg {
     cursor: grab;
-
+    touch-action: auto;
     &:active {
       cursor: grabbing;
     }

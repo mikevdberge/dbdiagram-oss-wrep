@@ -8,7 +8,7 @@
       </div>
       <div class="col-md-2 offset-md-2">
         <rect class="db-tooltip__colorblock">
-              <rect class="db-tooltip__colorblock db-tooltip__colorblock-default" :style="{'background': cl, 'height':'1.4em', width: '1.4em'}" @click.passive="setColor($event, null)"></rect>
+              <rect class="db-tooltip__colorblock db-tooltip__colorblock-default" :style="{'background': cl, 'height':'1.4em', width: '1.4em'}" @click.passive="setColor($event, null)" @touchend.passive="setColor($event, null)"></rect>
             </rect>
       </div>
       
@@ -19,7 +19,7 @@
         <div v-for="cl of row" :key="cl" style="padding: 4px 6px;">
         
             <rect class="db-tooltip__colorblock">
-              <rect class="db-tooltip__colorblock" :style="{'background': cl, 'height':'1.4em', width: '1.4em'}" @click.passive="setColor($event, cl)"></rect>
+              <rect class="db-tooltip__colorblock" :style="{'background': cl, 'height':'1.4em', width: '1.4em'}" @click.passive="setColor($event, cl)" @touchend.passive="setColor($event, cl)"></rect>
             </rect>
  
           </div>

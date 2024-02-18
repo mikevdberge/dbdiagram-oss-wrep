@@ -37,6 +37,7 @@
       <rect ref="bgRef" class="db-chart__bg"
             @mousedown="panZoom.enablePan()"
             @mouseup="panZoom.disablePan()"
+            @touchend="panZoom.disablePan()"
       />
       <rect class="db-chart__bg-grid"
             x="0" y="0"
@@ -89,7 +90,7 @@
       <g id="panel-overlays-layer"
          v-if="store.loaded">
         <v-db-panel 
-          @click:color="onColorClick"/>
+          @click:color="onColorClick" @touchend.passive="onColorClick"/>
       </g>
     
     </g>

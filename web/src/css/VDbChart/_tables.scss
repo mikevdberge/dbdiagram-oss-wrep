@@ -1,6 +1,7 @@
 @import "variables";
 
 .db-table {
+  touch-action: auto;
   overflow: visible;
   outline: transparent;
   outline-width: 5px;

@@ -20,6 +20,8 @@
     />
     <g class="db-table-header"
        @mousedown.passive="startDrag"
+       v-touch-hold="showTooltip"
+       v-on:touchend="hideTooltip"
        @mouseenter.passive="showTooltip"
        @mouseleave.passive="hideTooltip"
      
@@ -33,7 +35,7 @@
       <text class="db-table-header__name" y="16">
        {{ useSchema ? schema.name+'.' : "" }}{{ name }}
       </text>
-      <g class="db-table-header__color-icon" v-show="palette_icon" @click.passive="onHeaderClick">
+      <g class="db-table-header__color-icon" v-show="palette_icon" @click.passive="onHeaderClick" @touchend.passive="onHeaderClick">
       <rect class="db-table-header__icon-bg" :fill="headerColor == '' ? customColor : headerColor" :x="state.width-25" y="0" height="35" width="20" />
       <svg class="db-table-header__icon" xmlns="http://www.w3.org/2000/svg" :x="state.width-25" y="8" height="20" viewBox="0 -960 960 960" width="20">
         <path  d="m247-904 57-56 343 343q23 23 23 57t-23 57L457-313q-23 23-57 23t-57-23L153-503q-23-23-23-57t23-57l190-191-96-96Zm153 153L209-560h382L400-751Zm360 471q-33 0-56.5-23.5T680-360q0-21 12.5-45t27.5-45q9-12 19-25t21-25q11 12 21 25t19 25q15 21 27.5 45t12.5 45q0 33-23.5 56.5T760-280ZM80 0v-160h800V0H80Z"/>
@@ -168,6 +170,7 @@
     state.value.x = snap(p.x - dragOffsetX.value, gridSnap)
     state.value.y = snap(p.y - dragOffsetY.value, gridSnap)
     emit('update:position', state.value)
+    
   }
   const drop = (e) => {
     dragging.value = false

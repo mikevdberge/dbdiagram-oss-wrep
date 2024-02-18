@@ -21,6 +21,7 @@
 
     .db-ref__control-point {
       display: unset;
+      touch-action: auto;
     }
   }
 

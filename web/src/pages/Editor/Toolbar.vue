@@ -165,7 +165,9 @@
     padding="sm"
     size="md"
     class="bg-secondary q-mx-xs"
+    style="touch-action: auto;"
     @click="showPreferencesDialog"
+    
   >
     <q-icon
       size="xs"

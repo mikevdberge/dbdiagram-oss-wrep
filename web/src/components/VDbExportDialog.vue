@@ -67,7 +67,6 @@ const props = defineProps({
   const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
 
   function onOKClick () {
-
     const fstore = useFilesStore();
     const filesfs = localforage.createInstance({
     name: "dbdiagram-oss",
@@ -98,18 +97,20 @@ const props = defineProps({
       image.src = 'data:image/svg+xml;base64,'+ window.btoa(new XMLSerializer().serializeToString(fake_svg.svg));
 
       image.onload = function() {
-          console.log('load image');
+        console.log('load image');
         var canvas = document.createElement('canvas');
         canvas.width = image.width;
         canvas.height = image.height;
         var context = canvas.getContext('2d');
         context.drawImage(image, 0,0);
-
         var a = document.createElement('a');
         a.download = props.file_name;
         a.href = canvas.toDataURL('image/png');
         document.body.appendChild(a);
-        a.click();
+        
+         a.click();
+
+        
       }
         
       }  
