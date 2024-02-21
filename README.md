@@ -24,6 +24,11 @@ An Open Source alternative to dbdiagram.io, aiming to have the same basic featur
 + 12. Redesign table tooltip, added indexes
 + 13. Added not null and enum tag on diagram
 
+### Feb.24 update
++ 14. Shifts of header color bug repaired
++ 15. Added touch screen support (hover table header = hold touch) (without gestures)
++ 16. Added PNG resolution change in export form (default is better quality)
+
 ## Architecture - Solution
 
 ![Arch](https://raw.githubusercontent.com/NomadRazor/dbdiagram-oss-wrep/master/.github/media/arch.png)
