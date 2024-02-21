@@ -8,10 +8,17 @@
     <q-card-section>
         <div class="q-gutter-y-lg">
             <q-input class="col-md-4 col-lg-3"
-                 v-model="props.file_name"
+                 v-model="file_name"
                  type="string"
                  stack-label
                  :label="`File name`"
+        />
+        <q-input class="col-md-4 col-lg-3"
+                 v-model="resolution"
+                 type="number"
+                 stack-label
+                 :label="`PNG Resolution`"
+                 v-if="props.id == 'png'"
         />
         </div>
     </q-card-section>
@@ -44,10 +51,14 @@ const props = defineProps({
     },
     file_name:{
         type: String,
-        required: false
-    }
+        required: true
+    },
     
   })
+
+  const file_name = ref(props.file_name)
+  const resolution = ref(300)
+
 
   defineEmits([
     ...useDialogPluginComponent.emits
@@ -88,24 +99,24 @@ const props = defineProps({
     }
     
     if (props.id == 'png'){
-        
     let fake_svg = saveSvg();
    
       var image = new Image();
       image.height = fake_svg.size.height;
       image.width = fake_svg.size.width;
       image.src = 'data:image/svg+xml;base64,'+ window.btoa(new XMLSerializer().serializeToString(fake_svg.svg));
-
+      let scaleFactor = resolution.value/96;
       image.onload = function() {
         console.log('load image');
         var canvas = document.createElement('canvas');
-        canvas.width = image.width;
-        canvas.height = image.height;
+        canvas.width = image.width * scaleFactor;
+        canvas.height = image.height *scaleFactor;
         var context = canvas.getContext('2d');
         context.drawImage(image, 0,0);
+        context.setTransform(scaleFactor,0,0,scaleFactor,0,0);
         var a = document.createElement('a');
-        a.download = props.file_name;
-        a.href = canvas.toDataURL('image/png');
+        a.download = file_name.value;
+        a.href = canvas.toDataURL('image/png',1.0);
         document.body.appendChild(a);
         
          a.click();
@@ -116,7 +127,7 @@ const props = defineProps({
       }  
       $q.notify({
                 caption:"Export",
-                message:`File *.${props.id} successfully exported`,
+                message:`File ${file_name.value} successfully exported`,
                 color: 'green',
                 icon: 'task',
                 position: 'bottom-right'
