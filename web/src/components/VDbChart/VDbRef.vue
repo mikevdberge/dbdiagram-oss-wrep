@@ -51,6 +51,7 @@
               @mousedown.passive="controlPoint_startDrag"
               @mouseenter.passive="controlPoint_onMouseEnter"
               @mouseleave.passive="controlPoint_onMouseLeave"
+              @contextmenu.prevent="showTooltip"
       />
     </g>
 
@@ -61,6 +62,7 @@
   import { computed, nextTick, onBeforeUnmount, onMounted, onUpdated, reactive, ref, watch, watchEffect } from 'vue'
   import { useChartStore } from '../../store/chart'
   import { snap } from '../../utils/MathUtil'
+  import VDbRefActions from './VDbRefActions.vue'
 
   const props = defineProps({
     id: Number,
@@ -75,6 +77,9 @@
     containerRef: Object
   })
 
+  const emit = defineEmits([
+    'click:ref',
+  ])
   const store = useChartStore()
   let s = store.getRef(props.id)
 
@@ -204,7 +209,7 @@
     const directions = getDirection(startAnchors.value,endAnchors.value);
     const cpstart_direction = getDirection(startAnchors.value,controlPoints.value[0]);
     const cpend_direction = getDirection(endAnchors.value,controlPoints.value[1]);
-    console.log('direction',directions);
+    //console.log('direction',directions);
     let corelations = {
       x0: 0, 
       y0: 0,
@@ -357,6 +362,22 @@
     v.y = snap((p.y - controlPoint_dragOffset.y), gridSnap)
 
   }
+
+  const showTooltip = (e) => {
+    const p = store.inverseCtm.transformPoint({
+      x: e.offsetX,
+      y: e.offsetY
+    })
+    const tooltipPosition = {
+      x: p.x + 10,
+      y: p.y,
+    }
+   // console.log(e.target)
+   store.showRefPanel(tooltipPosition, VDbRefActions, {click:p, wpid:e.target.dataset.id, data:props})
+   emit('click:ref', e, s);
+    
+  }
+
   const controlPoint_drop = (e) => {
     controlPoint_dragOffset.x = 0
     controlPoint_dragOffset.y = 0

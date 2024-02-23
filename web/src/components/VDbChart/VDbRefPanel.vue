@@ -1,12 +1,12 @@
 <template>
-  <svg v-if="panel.show"
-       :x="panel.x"
-       :y="panel.y"
+  <svg v-if="refspanel.show"
+       :x="refspanel.x"
+       :y="refspanel.y"
        class="db-tooltip db-tooltip_panel"
   >
     <foreignObject x="0" y="0" width="100%" height="100%" class="db-tooltip__content">
       <q-card  class="db-tooltip__content-card" >
-        <component :is="panel.component" v-bind="panel.binds"  @click:color-block="onClick"/>
+        <component :is="refspanel.component" v-bind="refspanel.binds" @click:ref-cp="onClickRefCp"/>
       </q-card>
     </foreignObject>
   </svg>
@@ -18,12 +18,14 @@
 
   const store = useChartStore()
   const emit = defineEmits([
-    'click:color',
+    'click:cp'
   ])
 
-  function onClick(e, ...args){
+  function onClickRefCp(e, ...args){
     
-    emit("click:color",e, ...args)
+    emit("click:cp",e, ...args)
   }
-  const panel = computed(() => store.panel)
+
+  
+  const refspanel = computed(() => store.refspanel)
 </script>

@@ -3,7 +3,7 @@
   height: 100%;
   x: 0;
   y: 0;
-  pointer-events: none;
+  z-index: 1000;
 
   &__content {
     width: 100%;
@@ -31,6 +31,13 @@
   }
   &__colorblock-default{
     background: var(--table-header-color);
+  }
+}
+
+.db-tooltip_panel{
+  pointer-events: all;
+  &__list{
+    pointer-events: visible;
   }
 }
 

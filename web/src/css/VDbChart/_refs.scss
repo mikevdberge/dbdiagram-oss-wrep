@@ -4,8 +4,9 @@
     stroke: var(--ref-color);
     stroke-width: 2;
     stroke-linejoin: round;
-    stroke-linecap: butt;
-  }
+    stroke-linecap: round;
+    stroke-miterlimit: round($number: 3);
+ }
   &__hitbox {
     fill: none;
     stroke: transparent;

@@ -37,7 +37,18 @@ export const useChartStore = defineStore("chart", {
       width: 0,
       height: 0,
       datetime:null
-    }
+    },
+    refspanel: {
+      x: 0,
+      y: 0,
+      show: false,
+      target: null,
+      component: null,
+      binds: null,
+      width: 0,
+      height: 0,
+      datetime:null
+    },
   }),
   getters: {
     subGridSize(state) {
@@ -159,8 +170,30 @@ export const useChartStore = defineStore("chart", {
         datetime: Date.now()
       };
     },
+    showRefPanel(target, component, binds) {
+      this.refspanel = {
+        x: target.x,
+        y: target.y,
+        component: markRaw(component),
+        binds,
+        show: true,
+        datetime: Date.now()
+      };
+    },
     hidePanel() {
       this.panel = {
+        x:0,
+        y:0,
+        width:0,
+        height:0,
+        component: null,
+        binds: null,
+        show: false,
+        datetime:null
+      };
+    },
+    hideRefPanel() {
+      this.refspanel = {
         x:0,
         y:0,
         width:0,

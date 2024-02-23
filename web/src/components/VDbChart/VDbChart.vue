@@ -64,9 +64,11 @@
                   :key="ref.id"
                   v-bind="ref"
                   :container-ref="root"
+                  @click:ref="dblclickHelper(onRefDblClick, $event, ref)"
                   @click.passive="dblclickHelper(onRefDblClick, $event, ref)"
                   @mouseenter.passive="onRefMouseEnter"
                   @mouseleave.passive="onRefMouseLeave"
+                  
         />
       </g>
       <g id="tables-layer"
@@ -90,7 +92,15 @@
       <g id="panel-overlays-layer"
          v-if="store.loaded">
         <v-db-panel 
-          @click:color="onColorClick" @touchend.passive="onColorClick"/>
+          @click:color="onColorClick" 
+          @touchend.passive="onColorClick"/>
+      
+      </g>
+      <g id="panel-ref-overlays-layer"
+         v-if="store.loaded">
+        <v-db-ref-panel 
+          @click:cp="onCpClick"
+          @touchend.passive="onCpClick"/>
       </g>
     
     </g>
@@ -132,10 +142,11 @@
   import { computed, nextTick, onMounted, reactive, ref, watch, watchEffect } from 'vue'
   import VDbTable from './VDbTable'
   import VDbRef from './VDbRef'
-  import svgPanZoom from 'svg-pan-zoom'
+  import svgPanZoom, { pan } from 'svg-pan-zoom'
   import { useChartStore } from '../../store/chart'
   import VDbTooltip from './VDbTooltip'
   import VDbPanel from './VDbPanel.vue'
+  import VDbRefPanel from './VDbRefPanel.vue'
   import VDbTableGroup from './VDbTableGroup'
 
   const store = useChartStore()
@@ -339,10 +350,33 @@
     panZoom.value.zoom(newZoom)
   })
 
+   
+  
+
   function onRefDblClick (e, ref) {
     console.log("onRefDblClick", e, ref);
     emit('dblclick:ref', e, ref);
   }
+
+  function onCpClick (e,operation,points,wpid,refid) {
+
+   let rl = store.getRef(refid);
+   if (operation == 'RESET'){
+    rl.vertices = [];
+   }
+   if (operation == 'ADD'){
+    rl.vertices.splice(rl.vertices.length-1,0,{x:points.x, y:points.y});
+    //rl.vertices.push({x:points.x, y:points.y});
+   }
+   if (operation == 'DEL'){
+    if (rl.vertices.length > 2){
+      rl.vertices.splice(Number(wpid),1);
+    }
+   
+   }
+   store.updateRef(refid,rl)
+   store.hideRefPanel();
+ }
 
   function onColorClick (e, id,name, color) {
    

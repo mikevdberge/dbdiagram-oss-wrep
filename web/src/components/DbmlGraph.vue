@@ -61,6 +61,7 @@
   import VDbChart from './VDbChart/VDbChart'
   import { useChartStore } from '../store/chart'
   import VDbStructure from './VDbStructure'
+import { store } from 'quasar/wrappers'
 
   const props = defineProps({
     schema: {
@@ -84,6 +85,7 @@
     console.log
     chart.hideTooltip();
     if ((Date.now() - chart.panel.datetime) > 500) chart.hidePanel();
+    if ((Date.now() - chart.panel.datetime) > 500) chart.hideRefPanel();
   }
 
   const scale = computed({
@@ -202,7 +204,37 @@
       return cross_vector;
   }
 
+  function getBounds(bounds, objects,isRef = false){
+    for (let item in objects){
+        if (objects[item].x < bounds.l) {
+           bounds.l = objects[item].x
+        }
+        if (objects[item].y < bounds.t) {
+          bounds.t = objects[item].y
+        }
+        if (!isRef){
+          if (objects[item].x+objects[item].width > bounds.r) {
+          bounds.r = objects[item].x+objects[item].width 
+          }
+          if (objects[item].y+objects[item].height > bounds.b) {
+            bounds.b = objects[item].y+objects[item].height 
+          }
+        }
+       
+    }
+    return bounds;
+}
+
   const applyScaleToFit = () => {
+    let bounds = getBounds({l:0, r:0, t:0, b:0},chart.getTables);
+    let zoom = chart.getZoom;
+    let curPan = chart.getPan;
+    let newPan = {
+      x: zoom*((bounds.r-bounds.l)/2),
+      y: zoom*((bounds.t-bounds.b)/2)
+    }
+    console.log(newPan,bounds,chart.getPan)
+    chart.updatePan(newPan)
     // do nothing
   }
 

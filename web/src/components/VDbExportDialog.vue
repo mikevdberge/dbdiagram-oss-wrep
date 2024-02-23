@@ -72,23 +72,41 @@ const props = defineProps({
   a.setAttribute('download',props.file_name);
   a.click();
   URL.revokeObjectURL(url);
+  document.removeChild(a);
 
 }
 
   const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
 
   function onOKClick () {
-    const fstore = useFilesStore();
+
+    $q.notify({
+      caption:"Export",
+      message:`Saving file...`,
+      multiLine:true,
+      timeout:2000,
+      color: 'indigo-7',
+      spinner:true,
+      position: "center"})
+  
+      saveFile();
+    
+      onDialogOK()
+}
+
+function saveFile(){
+  const fstore = useFilesStore();
     const filesfs = localforage.createInstance({
     name: "dbdiagram-oss",
     storeName: "files"
   });
+  
     
 
     if (props.id == 'json'){
         filesfs.getItem(fstore.getCurrentFile).then(
             (file) => {
-                saveAs(new Blob([JSON.stringify(file)], {type:"image/svg+xml"}));
+                saveAs(new Blob([JSON.stringify(file)], {type:"application/json"}));
             }
         )
        
@@ -132,7 +150,6 @@ const props = defineProps({
                 icon: 'task',
                 position: 'bottom-right'
             })
-      onDialogOK()
 }
 
 function saveSvg(){

@@ -128,7 +128,6 @@
       size="md"
       color="secondary"
       class="q-mx-xs"
-      disable
     >
       <template #label>
         <q-icon
@@ -137,6 +136,18 @@
           name="file_upload"/>
         Import
       </template>
+      <q-list dense>
+        <q-item v-for="importOption of importOptions"
+                :key="importOption.id"
+                clickable
+                @click="importFile(importOption.id)"
+                dense
+        >
+          <q-item-section>
+            <q-item-label>{{ importOption.label }}</q-item-label>
+          </q-item-section>
+        </q-item>
+      </q-list>
     </q-btn-dropdown>
   </div>
 
@@ -184,6 +195,7 @@
   import VDbExportDialog from '../../components/VDbExportDialog.vue'
   import { useFilesStore } from '../../store/files'
 import { useRepoStore } from '../../store/repo'
+import VDbImportDialog from '../../components/VDbImportDialog.vue'
 
   const editor = useEditorStore()
   const files = useFilesStore()
@@ -212,6 +224,13 @@ onMounted(()=>{
     {
       id: 'png',
       label: 'PNG'
+    }
+  ])
+
+  const importOptions = ref([
+    {
+      id: 'json',
+      label: 'Json'
     }
   ])
 
@@ -285,6 +304,19 @@ console.log(cfn);
       },
     })
   }
+
+  const importFile = (id) => {
+      console.log(id)
+
+      $q.dialog({
+      component: VDbImportDialog,
+      componentProps: {
+        id:id
+      },
+    })
+
+  }
+  
   
 </script>
 
