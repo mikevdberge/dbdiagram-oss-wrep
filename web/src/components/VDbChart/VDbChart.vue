@@ -168,6 +168,10 @@
       type: Array,
       default: () => ([])
     },
+    startpan: {
+    x:0,
+    y:0
+  }
    
   })
 
@@ -207,9 +211,8 @@
     offset: {
       x: 0,
       y: 0
-    }
-
-  })
+    },
+  } )
   const panZoom = ref({})
   const position = reactive({
     x: 0,
@@ -350,6 +353,31 @@
     panZoom.value.zoom(newZoom)
   })
 
+  watch(() => props.startpan, (newPan) => {
+    //panZoom.value.resize()
+    let s = panZoom.value.getSizes();
+    let z = store.zoom
+    if (newPan.diagram.width > s.width){
+      z = s.width / newPan.diagram.width
+    } 
+    if (newPan.diagram.height > s.height){
+      z = s.height / newPan.diagram.height
+    }
+    const p = panZoom.value.getPan()
+    const pan = {
+      x: p.x - (s.width / 2),
+      y: p.y - (s.height / 2)
+    }
+    z = z - 0.04;
+    store.$patch({
+      pan: pan,
+      zoom: z
+    })
+    panZoom.value.center()
+    panZoom.value.zoom(z)
+    //panZoom.value.zoom(newZoom)
+    //panZoom.value.panBy(newPan)
+  })
    
   
 

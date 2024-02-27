@@ -2,6 +2,7 @@
   <div class="dbml-graph-wrapper">
     <v-db-chart v-if="schema && chart.loaded"
                 v-bind="schema"
+                :startpan="startPan"
                 @click="locateInEditor"
                 @dblclick:table-group="locateInEditor"
                 @dblclick:table="locateInEditor"
@@ -75,6 +76,16 @@ import { store } from 'quasar/wrappers'
   ])
   const editor = useEditorStore()
   const chart = useChartStore()
+  const startPan = ref({
+    pan: {
+      x:0,
+      y:0
+    },
+    diagram:{
+      width:0,
+      height:0
+    }
+  })
 
   const locateInEditor = (e, thing) => {
     console.log("locateInEditor", e, thing);
@@ -228,13 +239,29 @@ import { store } from 'quasar/wrappers'
   const applyScaleToFit = () => {
     let bounds = getBounds({l:0, r:0, t:0, b:0},chart.getTables);
     let zoom = chart.getZoom;
-    let curPan = chart.getPan;
-    let newPan = {
-      x: zoom*((bounds.r-bounds.l)/2),
-      y: zoom*((bounds.t-bounds.b)/2)
+    startPan.value = {
+      pan: {
+        x: zoom*((bounds.r+bounds.l)/2),
+        y: zoom*((bounds.t+bounds.b)/2)
+      },
+      diagram:{
+        width:0,
+        height:0
+      }
     }
-    console.log(newPan,bounds,chart.getPan)
-    chart.updatePan(newPan)
+    startPan.value = {
+      pan:{
+        x:startPan.value.pan.x,
+        y:startPan.value.pan.y
+      },
+      diagram:{
+        width:Math.abs(bounds.r)+Math.abs(bounds.l),
+        height:Math.abs(bounds.t)+Math.abs(bounds.b)
+      }
+    
+    }
+    console.log(chart.getZoom,chart.getPan,startPan.value)
+    chart.updatePan(startPan.value)
     // do nothing
   }
 
