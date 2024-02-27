@@ -30,6 +30,7 @@ An Open Source alternative to dbdiagram.io, aiming to have the same basic featur
 + 16. Added PNG resolution change in export form (default is better quality)
 + 17. Added import json files
 + 18. Added actions for refs control points (add, reset, delete)
++ 19. Added diagram fit function
 
 
 ## Architecture - Solution
