@@ -31,7 +31,8 @@ An Open Source alternative to dbdiagram.io, aiming to have the same basic featur
 + 17. Added import json files
 + 18. Added actions for refs control points (add, reset, delete)
 + 19. Added diagram fit function
-
++ 20. Fix key icon positioning
++ 21. Show key icon for columns in composite PK
 
 ## Architecture - Solution
 

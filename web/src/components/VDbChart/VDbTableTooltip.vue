@@ -11,11 +11,16 @@
     <div class="text-caption"><b>Indexes</b></div>
     <q-list>
       <div v-for="index of table.indexes" class="db-tip-highlights">
-        <span>({{ index.id }}) {{index.name}} </span>
-        <span v-if="index.type" class="enum-value_name">:[{{index.type}}]</span>
-        <br/>
+        <div v-if="index.name || index.type">
+          <span v-if="index.name">{{index.name}} </span>
+          <span v-if="index.type" class="enum-value_name">:[{{index.type}}]</span>
+        </div>
+        
+        
         <div v-if="index.pk || index.unique" class="db-tip-highlights">
-          <span class="enum-class">spec: </span>
+          <span class="enum-class">ID: </span>
+          <span v-if="index.id">{{ index.id }}</span>
+          <span class="enum-class"> spec: </span>
           <span v-if="index.pk">PK</span>
           <span v-if="index.pk && index.unique">|</span>
           <span v-if="index.unique">UNIQUE</span>
@@ -34,7 +39,8 @@
           <span class="enum-class">note: </span>
           <span>{{ index.note }}</span>
         </div>
-      </div>
+    </div>
+    
     </q-list>
   </q-card-section>
   

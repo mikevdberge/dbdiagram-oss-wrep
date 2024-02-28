@@ -45,6 +45,7 @@
     <g class="db-table-fields">
       <v-db-field v-for="field of fields"
                   v-bind="field"
+                  :indexPk="checkIndexPK(field)"
                   :key="field.id"
                   :width="state.width"
                   @click.passive="onFieldClick($event, field)"
@@ -109,6 +110,12 @@
 
   const updateHeight = () => {
     state.value.height = 35 + (30 * props.fields.length);
+  }
+
+  const checkIndexPK = (field) => {
+    console.log(props.indexes, field) 
+    console.log(props.indexes.filter((x)=> x.columns.filter((y)=> y.type == 'column' && y.value == field.name)))
+    return props.indexes.filter((x)=> x.columns.filter((y)=> y.type == 'column' && y.value == field.name).length > 0 && x.pk).length > 0
   }
 
   watch(() => props.useSchema, value => {
