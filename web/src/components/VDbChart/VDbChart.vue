@@ -357,18 +357,25 @@
     //panZoom.value.resize()
     let s = panZoom.value.getSizes();
     let z = store.zoom
+    let zHeight = 1
+    let cor = 0;
+    if (newPan.diagram.height > s.height){
+      zHeight = s.height / newPan.diagram.height
+      cor = (1-zHeight);
+    } else {
+      cor = 0.04
+    }
     if (newPan.diagram.width > s.width){
       z = s.width / newPan.diagram.width
+      
     } 
-    if (newPan.diagram.height > s.height){
-      z = s.height / newPan.diagram.height
-    }
+    z = z - cor
     const p = panZoom.value.getPan()
     const pan = {
       x: p.x - (s.width / 2),
       y: p.y - (s.height / 2)
     }
-    z = z - 0.04;
+    z = z;
     store.$patch({
       pan: pan,
       zoom: z

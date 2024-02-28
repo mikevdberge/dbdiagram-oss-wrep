@@ -260,7 +260,6 @@ import { store } from 'quasar/wrappers'
       }
     
     }
-    console.log(chart.getZoom,chart.getPan,startPan.value)
     chart.updatePan(startPan.value)
     // do nothing
   }
