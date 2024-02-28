@@ -49,7 +49,7 @@ import {ref} from 'vue'
               ['#990D0D','#CA4242','#DE65C3','#6724BB','#A15CF5']];
   
   const setColor = (e,color) => { 
-    emit('click:color-block',e,props.table.id, props.table.name, color)
+    emit('click:color-block',e,props.table.id, props.table.name, color,props.table.schema.name)
   };
   
 </script>

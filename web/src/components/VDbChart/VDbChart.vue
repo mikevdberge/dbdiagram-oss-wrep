@@ -413,9 +413,9 @@
    store.hideRefPanel();
  }
 
-  function onColorClick (e, id,name, color) {
+  function onColorClick (e, id,name, color,schema) {
    
-    store.updateTableColor(name,id,color);
+    store.updateTableColor(name,id,color,schema);
     store.hidePanel();
   }
   function onFieldDblClick (e, field) {

@@ -93,7 +93,7 @@
   const store = useChartStore()
 
   const state = computed(() => store.getTable(props.id))
-  const customColor = computed(() => store.getTableColor(props.name, props.id).color)
+  const customColor = computed(() => store.getTableColor(props.name, props.id,props.schema.name).color)
 
   const root = ref(null)
 
