@@ -113,8 +113,6 @@
   }
 
   const checkIndexPK = (field) => {
-    console.log(props.indexes, field) 
-    console.log(props.indexes.filter((x)=> x.columns.filter((y)=> y.type == 'column' && y.value == field.name)))
     return props.indexes.filter((x)=> x.columns.filter((y)=> y.type == 'column' && y.value == field.name).length > 0 && x.pk).length > 0
   }
 
