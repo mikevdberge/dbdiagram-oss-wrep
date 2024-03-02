@@ -372,6 +372,7 @@
       y: p.y - (s.height / 2)
     }
     z = Math.min(zWidth, zHeight) - cor;
+    console.log('sizes', s, 'start pan ', props.startpan, 'zooms', z,zWidth,zHeight)
     store.$patch({
       pan: pan,
       zoom: z

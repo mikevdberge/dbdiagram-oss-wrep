@@ -106,10 +106,12 @@
     const tableNameWidth = root.value.querySelectorAll('.db-table-header__name')[0].getComputedTextLength()*(0.08*16);
     const maxWidth = Math.max(maxFieldWidth, tableNameWidth);
     state.value.width = snap(Math.max(200, maxWidth), gridSnap)+20;
+    
   }
 
   const updateHeight = () => {
     state.value.height = 35 + (30 * props.fields.length);
+    
   }
 
   const checkIndexPK = (field) => {
@@ -118,20 +120,24 @@
 
   watch(() => props.useSchema, value => {
     updateWidth();
+    store.updateTable(props.id,state.value)
   });
   
   watch(() => props.name, value => {
     updateWidth();
+    store.updateTable(props.id,state.value)
   });
 
   watch(() => props.fields, value => {
     updateHeight();
     updateWidth();
+    store.updateTable(props.id,state.value)
   });
 
   onMounted(() => {
     updateHeight();
     updateWidth();
+    store.updateTable(props.id,state.value)
   })
 
   const emit = defineEmits([

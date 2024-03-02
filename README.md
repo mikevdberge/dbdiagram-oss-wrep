@@ -33,6 +33,7 @@ An Open Source alternative to dbdiagram.io, aiming to have the same basic featur
 + 19. Added diagram fit function
 + 20. Fix key icon positioning
 + 21. Show key icon for columns in composite PK
++ 22. Fix table header color reshuffle when changing the code
 
 ## Architecture - Solution
 

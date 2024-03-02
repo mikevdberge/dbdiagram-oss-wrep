@@ -1,3 +1,4 @@
+
 import { defineStore } from "pinia";
 import { markRaw } from "vue";
 
@@ -10,6 +11,7 @@ export const useChartStore = defineStore("chart", {
     tableGroups: {},
     tables: {},
     tablesColors:{},
+    actualTables:{},
     refs: {},
     grid: {
       size: 100,
@@ -91,21 +93,62 @@ export const useChartStore = defineStore("chart", {
     getTableColor(state) {
       return (tablename, tableId, schema) => {
         let tfn = `${schema}.${tablename}`;
-        if (!(tfn in state.tablesColors)) {
-          state.tablesColors[tfn] = {
-            color:null
-        }
-        }
-        if (tablename in state.tablesColors) {
-          state.tablesColors[tfn] = state.tablesColors[tablename];
-          delete state.tablesColors[tablename];
-        }
+       
         if (tableId in state.tablesColors) {
-          state.tablesColors[tfn] = state.tablesColors[tableId];
-          delete state.tablesColors[tableId];
-        }    
 
-        return state.tablesColors[tfn];
+          if (Object.keys(state.tablesColors[tableId]).includes('color')){
+            const c = state.tablesColors[tableId].color;
+            state.tablesColors[tableId][tfn] = {color:c}
+            delete state.tablesColors[tableId].color
+          }
+
+          if (!(tfn in state.tablesColors[tableId])){
+            let founded = false;
+            for (const obj in state.tablesColors){
+              if (tfn in state.tablesColors[obj] && obj != tableId){
+                state.tablesColors[tableId][tfn] = state.tablesColors[obj][tfn]
+                delete state.tablesColors[obj][tfn]
+                founded = true
+              }
+            }
+            if (!founded) {
+              if (Object.keys(state.tablesColors[tableId]).length > 0) {
+                if (!(tfn in state.tablesColors[tableId])){
+                  const k = Object.keys(state.tablesColors[tableId])[0]
+                  state.tablesColors[tableId][tfn] = state.tablesColors[tableId][k]
+                  delete state.tablesColors[tableId][k]
+                }  
+              } else {
+                state.tablesColors[tableId] = {};
+                state.tablesColors[tableId][tfn] = {color:null} 
+              }     
+            }
+          }
+        } else {
+
+          state.tablesColors[tableId] = {};
+          state.tablesColors[tableId][tfn] = {color:null} 
+
+          if (tablename in state.tablesColors) {
+            state.tablesColors[tableId] = {};
+            state.tablesColors[tableId][tfn] = state.tablesColors[tablename];
+            delete state.tablesColors[tablename];
+          } else {
+            state.tablesColors[tableId] = {};
+            state.tablesColors[tableId][tfn] = {color:null} 
+          }
+
+          if (tfn in state.tablesColors) {
+            state.tablesColors[tableId] = {};
+            state.tablesColors[tableId][tfn] = state.tablesColors[tfn]
+            delete state.tablesColors[tfn];
+          } else {
+            state.tablesColors[tableId] = {};
+            state.tablesColors[tableId][tfn] = {color:null} 
+          }
+          
+        }   
+        return state.tablesColors[tableId][tfn];
       };
     },
     getTableGroup(state) {
@@ -210,22 +253,40 @@ export const useChartStore = defineStore("chart", {
       };
     },
     loadDatabase(database) {
-      for(const tableGroup of database.schemas[0].tableGroups)
-      {
-        this.getTableGroup(tableGroup.id);
+      let tablesList = [];
+      for (const schema of database.schemas){
+        for(const tableGroup of schema.tableGroups)
+        {
+          this.getTableGroup(tableGroup.id);
+        }
+        
+        for(const table of schema.tables)
+        {
+          this.getTable(table.id);
+          this.getTableColor(table.name,table.id,schema.name)
+        }
+        tablesList.push(...schema.tables.map((x)=> x.id));
+       
+        for(const ref of schema.refs)
+        {
+          this.getRef(ref.id);
+        }
+        console.log(schema);
       }
-      for(const table of database.schemas[0].tables)
-      {
-        this.getTable(table.id);
-      }
-      for(const ref of database.schemas[0].refs)
-      {
-        this.getRef(ref.id);
-      }
-      console.log(database.schemas[0]);
+      
+      
+      this.$patch({
+        actualTables:tablesList
+      })
       this.loaded = true;
     },
-    load(state) {
+    load(state) {      
+      console.log(Object.values(this.actualTables))
+      for (const tbl in state.tables) {
+          if (!(Object.values(this.actualTables).includes(Number(tbl)))){
+            delete state.tables[tbl]
+          } 
+      }
       this.$reset();
       this.$patch({
         ...state,
@@ -257,7 +318,7 @@ export const useChartStore = defineStore("chart", {
     updateTableColor(tablename,id, color,schema) {
       let tfn = `${schema}.${tablename}`;
       this.$patch({
-        tablesColors:{[tfn]: {'color': color }}
+        tablesColors:{[id]: { [tfn]: {'color': color }}}
       });
     },
     updateTable(tableId, newTable) {
