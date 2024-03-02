@@ -12,6 +12,7 @@ export const useChartStore = defineStore("chart", {
     tables: {},
     tablesColors:{},
     actualTables:{},
+    tablesDict:{},
     refs: {},
     grid: {
       size: 100,
@@ -70,7 +71,12 @@ export const useChartStore = defineStore("chart", {
       return state.ctm;
     },
     getTables(){
-      return this.tables;
+      const k = Object.keys(this.tables)
+      let tbls = {};
+      for (const k in this.tables){
+        tbls[k] =  this.tables[k][Object.keys(this.tables[k])[0]]
+      }
+      return tbls;
     },
     getRefs(){
       return this.refs;
@@ -79,20 +85,71 @@ export const useChartStore = defineStore("chart", {
       return this.tableGroups;
     },
     getTable(state) {
-      return (tableId) => {
-        if (!(tableId in state.tables))
-          state.tables[tableId] = {
-            x: 0,
-            y: 0,
-            width: 220,
-            height: 32
-          };
-        return state.tables[tableId];
+      return (tableId,schema,tablename) => {
+
+        const tfn = `${schema}.${tablename}`;
+        if (schema !== undefined && tablename !== undefined) {
+          if (tableId in state.tables) {
+                    
+            if (Object.keys(state.tables[tableId]).includes('width')) {
+              const c = state.tables[tableId];
+              state.tables[tableId] = {};
+              state.tables[tableId][tfn] = c
+              
+            }
+            if (!(tfn in state.tables[tableId])){
+              let founded = false;
+              for (const obj in state.tables){
+                if (tfn in state.tables[Number(obj)] && obj != tableId){
+                  state.tables[tableId][tfn] = state.tables[Number(obj)][tfn]
+                  delete state.tables[Number(obj)][tfn]
+                  founded = true
+                }
+              }
+              if (!founded) {
+                
+                if (Object.keys(state.tables[tableId]).length > 0) {
+                  if (!(tfn in state.tables[tableId])){
+                    const k = Object.keys(state.tables[tableId])[0]
+                    state.tables[tableId][tfn] = state.tables[tableId][k]
+                    delete state.tables[tableId][k]
+                  }  
+                } else {
+                 
+                  state.tables[tableId] = {};
+                  state.tables[tableId][tfn] = {
+                    x: 0,
+                    y: 0,
+                    width: 220,
+                    height: 32
+                  };
+                }     
+              }
+            }
+          } else {
+            state.tables[tableId] = {}
+            state.tables[tableId][tfn] = {
+              x: 0,
+              y: 0,
+              width: 220,
+              height: 32
+            };
+          }
+        }
+
+        if (schema === undefined || tablename === undefined) {
+         
+          const k = Object.keys(state.tables[tableId])[0]
+          return state.tables[tableId][k];
+        } else {
+          return state.tables[tableId][tfn]
+        }
+        
       };
     },
     getTableColor(state) {
       return (tablename, tableId, schema) => {
-        let tfn = `${schema}.${tablename}`;
+        const tfn = `${schema}.${tablename}`;
        
         if (tableId in state.tablesColors) {
 
@@ -252,8 +309,60 @@ export const useChartStore = defineStore("chart", {
         datetime:null
       };
     },
+    getTableV2(state,tableId,schema,tablename){
+        const tfn = `${schema}.${tablename}`;
+        if (schema !== undefined && tablename !== undefined) {
+          if (tableId in state.tables) {
+                    
+            if (Object.keys(state.tables[tableId]).includes('width')) {
+              const c = state.tables[tableId];
+              state.tables[tableId] = {};
+              state.tables[tableId][tfn] = c
+              
+            }
+            if (!(tfn in state.tables[tableId])){
+              let founded = false;
+              for (const obj in state.tables){
+                if (tfn in state.tables[Number(obj)] && obj != tableId){
+                  state.tables[tableId][tfn] = state.tables[Number(obj)][tfn]
+                  delete state.tables[Number(obj)][tfn]
+                  founded = true
+                }
+              }
+              if (!founded) {
+                
+                if (Object.keys(state.tables[tableId]).length > 0) {
+                  if (!(tfn in state.tables[tableId])){
+                    const k = Object.keys(state.tables[tableId])[0]
+                    state.tables[tableId][tfn] = state.tables[tableId][k]
+                    delete state.tables[tableId][k]
+                  }  
+                } else {
+                 
+                  state.tables[tableId] = {};
+                  state.tables[tableId][tfn] = {
+                    x: 0,
+                    y: 0,
+                    width: 220,
+                    height: 32
+                  };
+                }     
+              }
+            }
+          } else {
+            state.tables[tableId] = {}
+            state.tables[tableId][tfn] = {
+              x: 0,
+              y: 0,
+              width: 220,
+              height: 32
+            };
+          }
+        }
+    },
     loadDatabase(database) {
       let tablesList = [];
+      let dict = {};
       for (const schema of database.schemas){
         for(const tableGroup of schema.tableGroups)
         {
@@ -262,8 +371,12 @@ export const useChartStore = defineStore("chart", {
         
         for(const table of schema.tables)
         {
-          this.getTable(table.id);
+          this.getTable(table.id,schema.name,table.name);
           this.getTableColor(table.name,table.id,schema.name)
+          dict[table.id] = {
+            schema: schema.name,
+            name: table.name
+          }
         }
         tablesList.push(...schema.tables.map((x)=> x.id));
        
@@ -274,22 +387,30 @@ export const useChartStore = defineStore("chart", {
         console.log(schema);
       }
       
-      
       this.$patch({
-        actualTables:tablesList
+        actualTables:tablesList,
+        tablesDict:dict
       })
       this.loaded = true;
     },
     load(state) {      
-      console.log(Object.values(this.actualTables))
+      console.log("state-> ",state,this.tablesDict)
       for (const tbl in state.tables) {
           if (!(Object.values(this.actualTables).includes(Number(tbl)))){
-            delete state.tables[tbl]
-          } 
+            delete state.tables[Number(tbl)]
+            delete state.tablesColors[Number(tbl)]
+          } else {
+            if (Object.keys(state.tables[Number(tbl)]).includes('width')){
+              this.getTableV2(state,tbl,this.tablesDict[Number(tbl)].schema,this.tablesDict[Number(tbl)].tablename)
+            }
+          }
       }
+      console.log("state-> ",state,this.tablesDict)
       this.$reset();
       this.$patch({
         ...state,
+        actualTables:{},
+        tablesDict:{},
         ctm: DOMMatrix.fromMatrix(state.ctm),
         inverseCtm: DOMMatrix.fromMatrix(state.inverseCtm).inverse()
       });
@@ -322,8 +443,10 @@ export const useChartStore = defineStore("chart", {
       });
     },
     updateTable(tableId, newTable) {
+      const k = Object.keys(this.tables[tableId])[0];
+      
       this.$patch({
-        tables:{[tableId]: newTable}
+        tables:{[tableId]: {[k]: newTable}}
       });
     },
     updateRef(refId, newRef) {
