@@ -30,12 +30,12 @@
       {{ name }}
     </text>
     <svg v-if="pk || props.indexPk" class="db-field__pk-icon" xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 -960 960 960" width="16"
-    :x="state.name_width+3"
+    :x="state.name_width+8"
           :y="size.height/4" >
       <path d="M280-400q-33 0-56.5-23.5T200-480q0-33 23.5-56.5T280-560q33 0 56.5 23.5T360-480q0 33-23.5 56.5T280-400Zm0 160q-100 0-170-70T40-480q0-100 70-170t170-70q67 0 121.5 33t86.5 87h352l120 120-180 180-80-60-80 60-85-60h-47q-32 54-86.5 87T280-240Zm0-80q56 0 98.5-34t56.5-86h125l58 41 82-61 71 55 75-75-40-40H435q-14-52-56.5-86T280-640q-66 0-113 47t-47 113q0 66 47 113t113 47Z"/>
     </svg>
     <svg v-if="_enum || note || dbdefault" xmlns="http://www.w3.org/2000/svg" class="db-field__note-icon" height="16" viewBox="0 -960 960 960" width="16" 
-          :x="pk || props.indexPk ? state.name_width + 20 : state.name_width+4"
+          :x="pk || props.indexPk ? state.name_width + 24 : state.name_width+8"
           :y="size.height/4">
 	      <path d="M200-200h360v-200h200v-360H200v560Zm0 80q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v400L600-120H200Zm80-280v-80h200v80H280Zm0-160v-80h400v80H280Zm-80 360v-560 560Z"/>
   </svg>
@@ -99,13 +99,14 @@ import { useChartStore } from '../../store/chart';
     name_width:(props.name.length*6)+16,
   }))
 
- const updateNameWidth = ()=>{
+ const updateNameWidth = (value)=>{
     if (!root.value) return;
-    state.value.name_width = root.value.querySelectorAll(".db-field__name")[0].getComputedTextLength()+18;
+    state.value.name_width = value.length * 7
+    state.value.name_width = state.value.name_width + 4
   };
 
   watch(() => props.name, value =>{
-      updateNameWidth();
+      updateNameWidth(value);
   });
 
   const type_shift = computed(()=>{
