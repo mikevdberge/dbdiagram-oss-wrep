@@ -9,7 +9,7 @@ An Open Source alternative to dbdiagram.io, aiming to have the same basic featur
 + 2. Remote S3 repository
 + 3. Repaired bug correct redrawing after changing the file
 + 4. Repaired bug droping "text" field in localStorage when selecting another clean file
-+ 5. Docker image:  docker pull nomadshub/dbdiagrams-oss-wrep:2.2
++ 5. Docker image:  docker pull nomadshub/dbdiagrams-oss-wrep:2.3.7
 
 ### Sep.23 update
 + 6. Notifications for repository actions
