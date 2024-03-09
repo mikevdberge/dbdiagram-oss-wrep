@@ -47,7 +47,7 @@
                  v-model.trim="repo.path"
                  type="string"
                  stack-label
-                 :label="`Path`"
+                 :label="`Comma-separated folders`"
         />
       </div>
       <div class="row q-col-gutter-x-md">
