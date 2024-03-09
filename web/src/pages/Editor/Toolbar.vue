@@ -55,17 +55,6 @@
         name="save"/>
     </q-btn>
 
-    <q-btn
-      padding="sm"
-      size="md"
-      class="bg-secondary q-mx-xs"
-      @click="uploadToRepo"
-    >
-      <q-icon
-        size="sm"
-        name="cloud_upload"/>
-    </q-btn>
-
     <q-btn-dropdown
       padding="xs sm"
       size="md"
