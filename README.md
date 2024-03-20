@@ -5,6 +5,8 @@ An Open Source alternative to dbdiagram.io, aiming to have the same basic featur
 
 ## Forked Info
 
+#### Actual docker version: 2.4.1
+
 + 1. Crappy auto-layout algorithm
 + 2. Remote S3 repository
 + 3. Repaired bug correct redrawing after changing the file
@@ -41,6 +43,8 @@ An Open Source alternative to dbdiagram.io, aiming to have the same basic featur
 
 ### Mar.24 update
 + 24. Added multiple folders support for S3 repo
++ 25. Added export to DBML, SQL (Postgres, MSSQL, MySQL)
++ 26. Added import from SQL (Postgres)
 
 ## Architecture - Solution
 

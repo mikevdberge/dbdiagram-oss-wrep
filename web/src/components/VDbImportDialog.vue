@@ -10,8 +10,7 @@
             <div class="q-gutter-y-lg">
                 <q-file class="col-md-4 col-lg-3"
                      v-model="imprtFile"
-                       
-                     :filter="checkType"
+                
                      :label="`Browse file`"
                      :accept="acceptFiles()"
                      @input="fileChange"
@@ -44,7 +43,9 @@
     import { computed, defineProps,ref } from 'vue';
     import { useFilesStore } from '../store/files';
     import localforage from "localforage";
+    const { importer } = require('@dbml/core');
     import { useChartStore } from '../store/chart';
+    import { useEditorStore } from '../store/editor';
 
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
     
@@ -59,6 +60,10 @@
     id: {
       type: String,
       required: true
+    },
+    ext: {
+      type: String,
+      required: true
     }
     
   })
@@ -66,7 +71,7 @@
   const newFileName = ref()
 
   const acceptFiles = () => {
-    return `.${props.id}`;
+    return `.${props.ext}`;
   }
 
   defineEmits([
@@ -75,9 +80,9 @@
 
  
 
-  const checkType = (files) => {
-    return files.filter(file => file.type === 'application/json')
-  }
+  /*const checkType = (files) => {
+    return files.filter(file => file.type === 'application/json' || file.type === 'text/plain')
+  }*/
 
   const onRejected = (rejectedEntries) => {
         // Notify plugin needs to be installed
@@ -112,9 +117,23 @@
                     })
                 } else {
                     if (option == 'R') {
-                        filesfs.setItem(newFileName.value,value.data).then(()=>{
-                            fstore.loadFile(newFileName.value);
-                        })
+                        if (props.id == 'pg') {
+                            const editor = useEditorStore();
+                            const dbmlData = importer.import(value.data, 'postgres');
+                            filesfs.getItem(newFileName.value).then((err, val)=>{
+                                if (err == null) {
+                                    val.source.text = dbmlData
+                                    filesfs.setItem(newFileName.value,val).then(()=>{
+                                        fstore.loadFile(newFileName.value);
+                                    })
+                                }
+                            })
+                        } else {
+                            filesfs.setItem(newFileName.value,value.data).then(()=>{
+                                fstore.loadFile(newFileName.value);
+                            })
+                        }
+                       
                         $q.notify({
                             caption:"Import",
                             message:`File ${newFileName.value} replaced`,
@@ -131,9 +150,17 @@
                             newname = newname+"_copy"+copyIndex;
                             copyIndex++;
                         }
-                        filesfs.setItem(newname,value.data).then(()=>{
-                            fstore.loadFile(newname);
-                        })
+                        if (props.id == 'pg') {
+                            const editor = useEditorStore();
+                            const dbmlData = importer.import(value.data, 'postgres');
+                            fstore.newImportFile(newname)
+                            editor.updateSourceText(dbmlData)
+                        } else {
+                            filesfs.setItem(newname,value.data).then(()=>{
+                                fstore.loadFile(newname);
+                             })
+                        }
+                        
                         $q.notify({
                             caption:"Import",
                             message:`File copy ${newFileName.value} saved`,
@@ -144,9 +171,17 @@
                         })
                     }
                     if (option == 'S'){
-                        filesfs.setItem(newFileName.value,value.data).then(()=>{
-                            fstore.loadFile(newFileName.value);
-                        })
+                        if (props.id == 'pg') {
+                            const editor = useEditorStore();
+                            const dbmlData = importer.import(value.data, 'postgres');
+                            fstore.newImportFile(newFileName.value)
+                            editor.updateSourceText(dbmlData)
+                        } else {
+                            filesfs.setItem(newFileName.value,value.data).then(()=>{
+                                fstore.loadFile(newFileName.value);
+                            })
+                        }
+                       
                     }
                     onDialogOK();
                 }
@@ -160,12 +195,14 @@
             reader.addEventListener('load', (e)=>{
                 let text = reader.result;
                 let err = null
-                let filedata;
-                let obj = JSON.parse(text);
-                if (obj.source != undefined && obj.preferences != undefined && obj.chart != undefined) {
-                    filedata = obj;
-                } else {
-                    err = "The file structure is incompatible with the application"
+                let filedata = text;
+                if (props.id == 'json'){
+                    let obj = JSON.parse(text);
+                    if (obj.source != undefined && obj.preferences != undefined && obj.chart != undefined) {
+                        filedata = obj;
+                    } else {
+                        err = "The file structure is incompatible with the application"
+                    }
                 }
                 let res = {data: filedata, error: err}
                 callback(res)
