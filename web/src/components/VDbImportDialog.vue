@@ -105,7 +105,7 @@
                 
         getFileContent(file,(value)=>{
             console.log(newFileName.value);
-            
+            let err = null;
             if (value.error != null) {
                     $q.notify({
                         caption:"Import",
@@ -118,30 +118,61 @@
                 } else {
                     if (option == 'R') {
                         if (props.id == 'pg') {
-                            const editor = useEditorStore();
-                            const dbmlData = importer.import(value.data, 'postgres');
-                            filesfs.getItem(newFileName.value).then((err, val)=>{
-                                if (err == null) {
+                            try {
+                                const dbmlData = importer.import(value.data, 'postgres');
+                                filesfs.getItem(newFileName.value).then((error, val)=>{
+                                if (error == null) {
                                     val.source.text = dbmlData
                                     filesfs.setItem(newFileName.value,val).then(()=>{
                                         fstore.loadFile(newFileName.value);
                                     })
                                 }
+                                $q.notify({
+                                    caption:"Import",
+                                    message:`File ${newFileName.value} replaced`,
+                                    multiLine:true, 
+                                    color: 'green',
+                                    icon: 'upload',
+                                    position: "bottom-right"
+                                })
                             })
+                            } catch(error){
+                                err = error
+                                $q.notify({
+                                    caption:"Import > "+error.name,
+                                    html:true,
+                                    message:`<div> <span>Import file [${newFileName.value}] error occured, founded: ${error.found} </span> 
+                                            <div>
+                                            <div>Start line: ${error.location.start.line}, column: ${error.location.start.column} </div>
+                                            <div>End line: ${error.location.end.line}, column: ${error.location.end.column} </div>
+                                            </div>
+                                            <p>${error.message}</p> Open console for more information </div>`,
+                                    multiLine:true,
+                                    color: 'red',
+                                    icon: 'warning',
+                                    progress:true,
+                                    position: "bottom-right",
+                                    timeout:10000,
+                                })
+                                console.error("IMPORT ERROR",error)
+                            }
+                            
+                            
                         } else {
                             filesfs.setItem(newFileName.value,value.data).then(()=>{
                                 fstore.loadFile(newFileName.value);
                             })
+                            $q.notify({
+                                caption:"Import",
+                                message:`File ${newFileName.value} replaced`,
+                                multiLine:true, 
+                                color: 'green',
+                                icon: 'upload',
+                                position: "bottom-right"
+                            })
                         }
                        
-                        $q.notify({
-                            caption:"Import",
-                            message:`File ${newFileName.value} replaced`,
-                            multiLine:true, 
-                            color: 'green',
-                            icon: 'upload',
-                            position: "bottom-right"
-                        })
+                       
                     }
                     if (option == 'SC') {
                         let copyIndex=0
@@ -151,31 +182,84 @@
                             copyIndex++;
                         }
                         if (props.id == 'pg') {
-                            const editor = useEditorStore();
-                            const dbmlData = importer.import(value.data, 'postgres');
-                            fstore.newImportFile(newname)
-                            editor.updateSourceText(dbmlData)
+                            try {
+                                const editor = useEditorStore();
+                                const dbmlData = importer.import(value.data, 'postgres');
+                                fstore.newImportFile(newname)
+                                editor.updateSourceText(dbmlData)
+                                $q.notify({
+                                    caption:"Import",
+                                    message:`File copy ${newFileName.value} saved`,
+                                    multiLine:true,
+                                    color: 'green',
+                                    icon: 'upload',
+                                    position: "bottom-right"
+                                })
+                            } catch(error) {
+                                err = error
+                                $q.notify({
+                                    caption:"Import > "+error.name,
+                                    html:true,
+                                    message:`<div> <span>Import file [${newFileName.value}] error occured, founded: ${error.found} </span> 
+                                            <div>
+                                            <div>Start line: ${error.location.start.line}, column: ${error.location.start.column} </div>
+                                            <div>End line: ${error.location.end.line}, column: ${error.location.end.column} </div>
+                                            </div>
+                                            <p>${error.message}</p> Open console for more information </div>`,
+                                    multiLine:true,
+                                    color: 'red',
+                                    icon: 'warning',
+                                    progress:true,
+                                    position: "bottom-right",
+                                    timeout:10000,
+                                })
+                                console.error("IMPORT ERROR",error)
+                            }
+                            
                         } else {
                             filesfs.setItem(newname,value.data).then(()=>{
                                 fstore.loadFile(newname);
                              })
+                             $q.notify({
+                                caption:"Import",
+                                message:`File copy ${newFileName.value} saved`,
+                                multiLine:true,
+                                color: 'green',
+                                icon: 'upload',
+                                position: "bottom-right"
+                            })
                         }
                         
-                        $q.notify({
-                            caption:"Import",
-                            message:`File copy ${newFileName.value} saved`,
-                            multiLine:true,
-                            color: 'green',
-                            icon: 'upload',
-                            position: "bottom-right"
-                        })
+                        
                     }
                     if (option == 'S'){
                         if (props.id == 'pg') {
-                            const editor = useEditorStore();
-                            const dbmlData = importer.import(value.data, 'postgres');
-                            fstore.newImportFile(newFileName.value)
-                            editor.updateSourceText(dbmlData)
+                            try {
+                                const editor = useEditorStore();
+                                const dbmlData = importer.import(value.data, 'postgres');
+                                fstore.newImportFile(newFileName.value)
+                                editor.updateSourceText(dbmlData)
+                            } catch (error) {
+                                err = error
+                                $q.notify({
+                                    caption:"Import > "+error.name,
+                                    html:true,
+                                    message:`<div> <span>Import file [${newFileName.value}] error occured, founded: ${error.found} </span> 
+                                            <div>
+                                            <div>Start line: ${error.location.start.line}, column: ${error.location.start.column} </div>
+                                            <div>End line: ${error.location.end.line}, column: ${error.location.end.column} </div>
+                                            </div>
+                                            <p>${error.message}</p> Open console for more information </div>`,
+                                    multiLine:true,
+                                    color: 'red',
+                                    icon: 'warning',
+                                    progress:true,
+                                    position: "bottom-right",
+                                    timeout:10000,
+                                })
+                                console.error("IMPORT ERROR",error)
+                            }
+                            
                         } else {
                             filesfs.setItem(newFileName.value,value.data).then(()=>{
                                 fstore.loadFile(newFileName.value);
@@ -183,6 +267,18 @@
                         }
                        
                     }
+                    if (err == null) {
+                        $q.notify({
+                            caption:"Import",
+                            message:`File ${newFileName.value} imported`,
+                            multiLine:true,
+                            color: 'green',
+                            icon: 'upload',
+                            position: "bottom-right"
+                        })
+                    }
+                    
+
                     onDialogOK();
                 }
         });
@@ -244,14 +340,7 @@
                 })
             } else {
                 saveAndLoadFile(imprtFile.value,'S')
-                $q.notify({
-                    caption:"Import",
-                    message:`File ${newFileName.value} imported`,
-                    multiLine:true,
-                    color: 'green',
-                    icon: 'upload',
-                    position: "bottom-right"
-                })
+               
                 onDialogOK();
             }
                 
