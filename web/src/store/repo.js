@@ -38,6 +38,11 @@ export const useRepoStore = defineStore("repo", {
     getPath(state){
         return state.path;
     },
+    getFolders(state){
+        let flds = state.path.split(',');
+        flds.map(v=>v.trim())
+        return flds;
+    },
     getAccessKey(state){
         return state.access_key;
     },
@@ -61,6 +66,7 @@ export const useRepoStore = defineStore("repo", {
   },
   actions: {
     loadRepoConfig(){
+        
         fs.getItem("cfg").then((val) => {
             if (val){
                 this.load(JSON.parse(val));
@@ -95,8 +101,11 @@ export const useRepoStore = defineStore("repo", {
             var files = data.Contents;
             if (files.length > 0) {
                 var all_files = [];
+                var folders = this.path.split(',');
+                folders.forEach(v=>v.trim())
                 files.forEach((val)=>{
-                    if (String(val.Key).startsWith(this.path) && String(val.Key).endsWith(".json")){
+                    const k = String(val.Key).substring(0,String(val.Key).indexOf('/'));
+                    if (folders.includes(k) && String(val.Key).endsWith(".json")){
                         all_files.push(val.Key);
                     }
                 });
@@ -178,13 +187,21 @@ export const useRepoStore = defineStore("repo", {
         
     },
 
-    sendInRepo(){
+    sendInRepo(folder){
+        if (folder == undefined) {
+            folder = this.getFolders()[0]
+        }
         const fstore = useFilesStore();
         var key = fstore.getCurrentFile;
         
         
-        if (!key.startsWith(this.path)){
-            key = this.path +'/'+key+'.json';
+        if (!key.startsWith(folder)){
+            if (key.indexOf('/') > -1) {
+                key = folder + key.substring(key.indexOf('/'),key.length)
+            } else {
+                key = folder +'/'+key+'.json';
+            }
+            
         } 
         console.log(key);
         var parts = [];

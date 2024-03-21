@@ -28,7 +28,7 @@
               flat
               dense
               round
-              @click="() => confirmDeleteFile(file)"
+              @click.stop="() => confirmDeleteFile(file)"
             />
           </q-item-section>
         </q-item>
@@ -55,16 +55,33 @@
         name="save"/>
     </q-btn>
 
-    <q-btn
-      padding="sm"
+    <q-btn-dropdown
+      padding="xs sm"
       size="md"
-      class="bg-secondary q-mx-xs"
-      @click="uploadToRepo"
+      color="secondary"
+      class="q-mx-xs"
+      @show="repo.getRepoFiles"
+      
     >
-      <q-icon
+      <template #label>
+        <q-icon
+        class="q-mr-sm"
         size="sm"
         name="cloud_upload"/>
-    </q-btn>
+        to repo
+      </template>
+      <q-list dense>
+        <q-item v-for="rf of repo.getFolders" :key="rf"
+                clickable
+                v-close-popup
+                @click="()=>uploadToRepo(rf)"
+        >
+          <q-item-section>
+            <q-item-label>{{ rf }}</q-item-label>
+          </q-item-section>
+        </q-item>
+      </q-list>
+    </q-btn-dropdown>
 
     <q-btn-dropdown
       padding="xs sm"
@@ -79,7 +96,7 @@
           class="q-mr-sm"
           size="sm"
           name="cloud_download"/>
-        Take from repo
+        from repo
       </template>
       <q-list dense>
         <q-item v-for="rf of repoFiles" :key="rf"
@@ -113,7 +130,7 @@
         <q-item v-for="exportOption of exportOptions"
                 :key="exportOption.id"
                 clickable
-                @click="showExportDialog(exportOption.id)"
+                @click="showExportDialog(exportOption.id,exportOption.ext)"
                 dense
         >
           <q-item-section>
@@ -140,7 +157,7 @@
         <q-item v-for="importOption of importOptions"
                 :key="importOption.id"
                 clickable
-                @click="importFile(importOption.id)"
+                @click="importFile(importOption.id,importOption.ext)"
                 dense
         >
           <q-item-section>
@@ -215,23 +232,52 @@ onMounted(()=>{
   const exportOptions = ref([
     {
       id: 'json',
-      label: 'Json'
+      label: 'Json',
+      ext:"json"
     },
     {
       id: 'svg',
-      label: 'SVG'
+      label: 'SVG',
+      ext:"svg"
     },
     {
       id: 'png',
-      label: 'PNG'
+      label: 'PNG',
+      ext:"png"
+    },
+    {
+      id: 'dbml',
+      label: 'DBML',
+      ext:"dbml"
+    },
+    {
+      id: 'pg',
+      label: 'Postgres',
+      ext:"sql"
+    },
+    {
+      id: 'mssql',
+      label: 'MSSQL',
+      ext:"sql"
+    },
+    {
+      id: 'mysql',
+      label: 'MySQL',
+      ext:"sql"
     }
   ])
 
   const importOptions = ref([
     {
       id: 'json',
-      label: 'Json'
-    }
+      label: 'Json',
+      ext:'json'
+    },
+    {
+      id: 'pg',
+      label: 'Postgres',
+      ext:'sql'
+    },
   ])
 
   const dark = computed({
@@ -251,7 +297,7 @@ onMounted(()=>{
   const deleteFile = (file) => files.deleteFile(file)
   const newFile = () => files.newFile()
   const saveFile = () => files.saveFile()
-  const uploadToRepo = () => repo.sendInRepo()
+  const uploadToRepo = (folder) => repo.sendInRepo(folder)
   const downloadFromRepo = (file) => repo.loadFromRepo(file);
   const loadFile = (file) => files.loadFile(file)
 
@@ -292,10 +338,10 @@ onMounted(()=>{
     })
   }
 
-  const showExportDialog = (id) => {
+  const showExportDialog = (id,ext) => {
     var cfn = files.getCurrentFile.split('/');
-    var fn = cfn[cfn.length-1].split('.')[0] +'.'+ id;
-console.log(cfn);
+    var fn = cfn[cfn.length-1].split('.')[0] +'.'+ ext;
+  console.log(cfn,id,ext);
     $q.dialog({
       component: VDbExportDialog,
       componentProps: {
@@ -305,13 +351,14 @@ console.log(cfn);
     })
   }
 
-  const importFile = (id) => {
+  const importFile = (id,ext) => {
       console.log(id)
 
       $q.dialog({
       component: VDbImportDialog,
       componentProps: {
-        id:id
+        id:id,
+        ext:ext
       },
     })
 

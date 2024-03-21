@@ -105,6 +105,18 @@ export const useFilesStore = defineStore("files", {
       chart.$reset();
       this.saveFile();
     },
+    newImportFile(name) {
+      this.$patch({
+        currentFile: name
+      });
+
+      const editor = useEditorStore();
+      const chart = useChartStore();
+
+      editor.$reset();
+      chart.$reset();
+      this.saveFile();
+    },
     deleteFile(fileName) {
       if (!fileName) return;
       fs.removeItem(fileName).then(() => {
