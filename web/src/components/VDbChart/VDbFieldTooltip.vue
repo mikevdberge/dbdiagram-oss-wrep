@@ -11,7 +11,9 @@
   </q-card-section>
   <q-separator />
   <q-card-section>
-    <div v-if="field.note">Note: {{ field.note }}</div>
+    <div v-if="field.note" style="white-space: pre;">Note: 
+     {{ field.note }}
+    </div>
     <div v-if="field._enum"  class="db-tip-highlights">
       <span class="enum-class">ENUM </span> 
       <span class="enum-type">{{ field._enum.name }}:</span> 
@@ -38,9 +40,11 @@
 
 <script setup>
   
+ 
   const props = defineProps({
     field: Object,
   });
+  
 
 </script>
 
